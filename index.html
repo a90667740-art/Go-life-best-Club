@@ -1,0 +1,1019 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b3d2e" />
+    <meta
+      name="description"
+      content="골프 동호회 원페이지 웹사이트 — 모임 소개, 회칙, 스코어보드, 라운딩 일정 RSVP, 사진첩, 신규 회원가입"
+    />
+    <title>고라베 Club</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+
+    <header class="site-header" id="top">
+      <nav class="nav" aria-label="주요 메뉴">
+        <div class="nav__inner">
+          <a class="brand" href="#top" aria-label="홈으로">
+            <img class="brand__logo" src="./images/logo.jpg" alt="고라베 Golf Club 로고" />
+            <span class="brand__text">
+              <strong>고라베</strong>
+              <span class="brand__sub">Golf Club</span>
+            </span>
+          </a>
+
+          <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="navMenu">
+            <span class="sr-only">메뉴 열기</span>
+            <span class="nav__toggleLines" aria-hidden="true"></span>
+          </button>
+
+          <div class="nav__menu" id="navMenu">
+            <a class="nav__link" href="#about">소개</a>
+            <a class="nav__link" href="#rules">회칙</a>
+            <a class="nav__link" href="#scoreboard">스코어</a>
+            <a class="nav__link" href="#members">회원</a>
+            <a class="nav__link" href="#rsvp">RSVP</a>
+            <a class="nav__link" href="#gallery">사진첩</a>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main">
+      <!-- HERO -->
+      <section class="hero" aria-label="메인 배너">
+        <div class="container hero__inner">
+          <div class="hero__card">
+            <img class="hero__logo" src="./images/logo.jpg" alt="고라베 Golf Club 로고" />
+            <p class="eyebrow">매너 · 즐거움 · 꾸준한 성장</p>
+            <h1 class="hero__title">
+              서현고 동창들의<br />
+              <span class="accent">골프 모임</span>
+            </h1>
+            <p class="hero__desc">
+              Go! Life Best! 고라베는 <strong>좋은 분위기</strong>를 먼저 생각합니다.
+              함께 할 수 있어서 기쁜 모임이 되길 바랍니다.
+            </p>
+            <div class="hero__actions">
+              <a class="btn btn--primary" href="#rsvp">다가오는 라운딩 RSVP</a>
+            </div>
+            <ul class="hero__stats" aria-label="모임 요약">
+              <li class="stat">
+                <strong class="stat__num">정규 라운딩</strong>
+                <span class="stat__label">회원 우선 참여</span>
+              </li>
+              <li class="stat">
+                <strong class="stat__num">Guest</strong>
+                <span class="stat__label">손님도 환영</span>
+              </li>
+              <li class="stat">
+                <strong class="stat__num">그린 매너</strong>
+                <span class="stat__label">최우선</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="hero__media" aria-label="골프장 배경 이미지 자리">
+            <div class="hero__image" role="img" aria-label="골프장 배경 이미지 (자리)"></div>
+            <img class="hero__bgLogo" src="./images/logo_snp.png" alt="써닝포인트 CC 로고" />
+            <div class="hero__badge" aria-label="다음 일정 알림">
+              <span class="hero__badgeTitle">Next Round</span>
+              <strong class="hero__badgeMain" id="nextRoundMain">4월 15일(수) · 07:21</strong>
+              <span class="hero__badgeSub" id="nextRoundSub">써닝포인트 CC</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ABOUT -->
+      <section class="section" id="about" aria-label="모임 소개">
+        <div class="container">
+          <header class="section__header">
+            <h2 class="section__title">About 고라베</h2>
+            <p class="section__subtitle">좋은 사람들과, 좋은 매너로, 오래가는 라운딩</p>
+          </header>
+
+          <div class="grid-2">
+            <div class="card card--soft">
+              <h3 class="card__title">우리는 이런 모임이에요</h3>
+              <p class="card__text">
+                <strong>고라베 Club</strong>은 실력보다 분위기를 먼저 챙기는 골프 동호회입니다.
+                서현고 동창들이 모여서 웃고 떠들며 즐기는 골프모임 입니다.
+              </p>
+              <p class="card__text">
+                정규 라운딩을 진행하며, 번개 라운딩도 수시로 진행합니다. “함께라서 더 즐거운 골프”가 우리 모임의 목표입니다.
+              </p>
+            </div>
+
+            <div class="card">
+              <h3 class="card__title">모임 운영</h3>
+              <ul class="list">
+                <li><strong>정규 라운딩</strong>: 26년 총 5 회(일정은 RSVP에서 공지)</li>
+                <li><strong>스코어보드</strong>: 24년 6월 부터 기록</li>
+                <li><strong>신규 회원</strong>: 상시 모집 (정회원의 추천)</li>
+              </ul>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RULES -->
+      <section class="section section--alt" id="rules" aria-label="회칙">
+        <div class="container">
+          <header class="section__header">
+            <h2 class="section__title">Club Rules</h2>
+            <p class="section__subtitle">회칙 및 규칙</p>
+          </header>
+
+          <div class="accordion" data-accordion>
+            <div class="accordion__item">
+              <button class="accordion__trigger" type="button" aria-expanded="false">
+                <span>1) 회칙</span>
+                <span class="accordion__icon" aria-hidden="true"></span>
+              </button>
+              <div class="accordion__panel" role="region" aria-label="회칙">
+                <div class="accordion__content">
+                  <ol class="list">
+                    <li>
+                      <strong>조직 관련</strong>
+                      <ol class="list">
+                        <li>회장의 기여도(금액)가 회비보다 높을 경우 회비를 면제한다.</li>
+                        <li>총무는 회장이 지명한다</li>
+                        <li>총무로 지명된자는 다음 회비를 면제한다.</li>
+                      </ol>
+                    </li>
+                    <li>
+                      <strong>회비관련</strong>
+                      <ol class="list">
+                        <li>1년씩 30만원으로 한다. (매년 8월1일~ 다음해 7월 31일)</li>
+                        <li>매 라운딩 참가비는 정회원, 게스트 공히 당일 그린피로 한다.</li>
+                        <li>
+                          15만원상당 이상의 후원자는 참가비를 면제한다. (그린피, 식사비, 후원물품 등)
+                        </li>
+                        <li>회비 납입 후 1년간 정규라운딩 절반 미만으로 참가 시 골프공 1더즌 제공</li>
+                        <li>회비 납입 후 1년간 정규라운딩 모두 참가하지 못하면 회비 납입 6개월 유예</li>
+                      </ol>
+                    </li>
+                    <li>
+                      <strong>자격관련</strong>
+                      <ol class="list">
+                        <li>서현고 동창을 원칙으로 한다.</li>
+                        <li>정회원 전체의 과반이상이 참석하고 그중 3분의 2이상이 동의하여야 한다.</li>
+                      </ol>
+                    </li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion__item">
+              <button class="accordion__trigger" type="button" aria-expanded="false">
+                <span>2) 게임 관련 규칙</span>
+                <span class="accordion__icon" aria-hidden="true"></span>
+              </button>
+              <div class="accordion__panel" role="region" aria-label="게임 관련 규칙">
+                <div class="accordion__content">
+                  <ol class="list">
+                    <li>
+                      <strong>게임관련</strong>
+                      <ol class="list">
+                        <li>
+                          기준핸디 90타 미만은 멀리건 불가 (90타 이상은 멀리건 1개, 100타 이상은 해당
+                          팀원들 자율에 맡김)
+                        </li>
+                        <li>
+                          100타 이하 빼놓고 치기 불가 (예외는 인정. Ex 캐디가 인정하는 로컬룰, 디봇자국,
+                          정돈안된 벙커, 스탠스가 안나오는경우 등만 1미터 이내드롭 허용)
+                        </li>
+                        <li>기준핸디 산정방식 (지난 기준핸디 + 이번대회 결과의 평균)</li>
+                        <li>기준핸디보다 10개 이상 더칠경우 벌금 1만원, 15개 이상 더칠경우 2만원</li>
+                      </ol>
+                    </li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCOREBOARD -->
+      <section class="section" id="scoreboard" aria-label="스코어보드">
+        <div class="container">
+          <header class="section__header">
+            <h2 class="section__title">Scoreboard</h2>
+            <p class="section__subtitle">고라베 라운딩 기록 · 연도별 기록</p>
+          </header>
+
+          <div class="accordion scoreboard-accordion" data-accordion>
+            <!-- 2024년 -->
+            <div class="accordion__item">
+              <button class="accordion__trigger" type="button" aria-expanded="false">
+                <span>2024년</span>
+                <span class="accordion__icon" aria-hidden="true"></span>
+              </button>
+              <div class="accordion__panel" role="region" aria-label="2024년 기록">
+                <div class="accordion__content">
+                  <div class="scoreboard-round">
+                    <h4 class="scoreboard-round__title">9회 · 2024.6.11 · 실크밸리GC SILK</h4>
+                    <div class="tableWrap tableWrap--scroll">
+                      <table class="scoreTable">
+                        <thead>
+                          <tr>
+                            <th scope="col">순위</th>
+                            <th scope="col">구분</th>
+                            <th scope="col">이름</th>
+                            <th scope="col">기준핸디</th>
+                            <th scope="col">당일 스코어</th>
+                            <th scope="col">핸디대비 최종</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr class="rank rank--1"><td><span class="medal medal--gold">🥇</span></td><td>MEMBER</td><td class="name">전지오</td><td>91</td><td class="score">81</td><td>10</td></tr>
+                          <tr class="rank rank--2"><td><span class="medal medal--silver">🥈</span></td><td>MEMBER</td><td class="name">김온</td><td>89</td><td class="score">85</td><td>4</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>최지훈</td><td>105</td><td>102</td><td>3</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>허성훈</td><td>111</td><td>108</td><td>3</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>계승범</td><td>104</td><td>102</td><td>2</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>박민웅</td><td>106</td><td>104</td><td>2</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>문유석</td><td>95</td><td>94</td><td>1</td></tr>
+                          <tr><td></td><td>GUEST</td><td>김준환</td><td>110</td><td>110</td><td>0</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>주경필</td><td>89</td><td>90</td><td>-1</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>홍원욱</td><td>104</td><td>105</td><td>-1</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>김지진</td><td>105</td><td>106</td><td>-1</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>김영두</td><td>100</td><td>103</td><td>-3</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>김선후</td><td>115</td><td>118</td><td>-3</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>오수창</td><td>115</td><td>120</td><td>-5</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>이용</td><td>107</td><td>113</td><td>-6</td></tr>
+                          <tr><td></td><td>GUEST</td><td>이동진</td><td>100</td><td>112</td><td>-12</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="scoreboard-round">
+                    <h4 class="scoreboard-round__title">10회 · 2024.9.6 · 베뉴지 CC</h4>
+                    <div class="tableWrap tableWrap--scroll">
+                      <table class="scoreTable">
+                        <thead>
+                          <tr>
+                            <th scope="col">순위</th>
+                            <th scope="col">구분</th>
+                            <th scope="col">이름</th>
+                            <th scope="col">기준핸디</th>
+                            <th scope="col">당일 스코어</th>
+                            <th scope="col">핸디대비 최종</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr class="rank rank--1"><td><span class="medal medal--gold">🥇</span></td><td>MEMBER</td><td class="name">홍원욱</td><td>104</td><td class="score">99</td><td>5</td></tr>
+                          <tr class="rank rank--2"><td><span class="medal medal--silver">🥈</span></td><td>MEMBER</td><td class="name">계승범</td><td>103</td><td class="score">100</td><td>3</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>전지오</td><td>86</td><td>85</td><td>1</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>김선후</td><td>116</td><td>116</td><td>0</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>김온</td><td>87</td><td>88</td><td>-1</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>주경필</td><td>89</td><td>90</td><td>-1</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>허성훈</td><td>109</td><td>110</td><td>-1</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>문유석</td><td>94</td><td>103</td><td>-9</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="scoreboard-round">
+                    <h4 class="scoreboard-round__title">11회 · 2024.11.8 · 마론뉴데이 CC</h4>
+                    <div class="tableWrap tableWrap--scroll">
+                      <table class="scoreTable">
+                        <thead>
+                          <tr>
+                            <th scope="col">순위</th>
+                            <th scope="col">구분</th>
+                            <th scope="col">이름</th>
+                            <th scope="col">기준핸디</th>
+                            <th scope="col">당일 스코어</th>
+                            <th scope="col">핸디대비 최종</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr class="rank rank--1"><td><span class="medal medal--gold">🥇</span></td><td>MEMBER</td><td class="name">이용</td><td>110</td><td class="score">97</td><td>13</td></tr>
+                          <tr class="rank rank--2"><td><span class="medal medal--silver">🥈</span></td><td>MEMBER</td><td class="name">김선후</td><td>116</td><td class="score">105</td><td>11</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>김영두</td><td>101</td><td>93</td><td>8</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>전지오</td><td>86</td><td>86</td><td>0</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>홍원욱</td><td>102</td><td>102</td><td>0</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>주경필</td><td>90</td><td>91</td><td>-1</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>계승범</td><td>102</td><td>104</td><td>-2</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>김온</td><td>88</td><td>92</td><td>-4</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 2025년 -->
+            <div class="accordion__item">
+              <button class="accordion__trigger" type="button" aria-expanded="false">
+                <span>2025년</span>
+                <span class="accordion__icon" aria-hidden="true"></span>
+              </button>
+              <div class="accordion__panel" role="region" aria-label="2025년 기록">
+                <div class="accordion__content">
+                  <div class="scoreboard-round">
+                    <h4 class="scoreboard-round__title">12회 · 2025.4.4 · 실크밸리 GC Lake</h4>
+                    <div class="tableWrap tableWrap--scroll">
+                      <table class="scoreTable">
+                        <thead>
+                          <tr>
+                            <th scope="col">순위</th>
+                            <th scope="col">구분</th>
+                            <th scope="col">이름</th>
+                            <th scope="col">기준핸디</th>
+                            <th scope="col">당일 스코어</th>
+                            <th scope="col">핸디대비 최종</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr class="rank rank--1"><td><span class="medal medal--gold">🥇</span></td><td>MEMBER</td><td class="name">문유석</td><td>99</td><td class="score">90</td><td>9</td></tr>
+                          <tr class="rank rank--2"><td><span class="medal medal--silver">🥈</span></td><td>MEMBER</td><td class="name">김영두</td><td>97</td><td class="score">89</td><td>8</td></tr>
+                          <tr><td></td><td>GUEST</td><td>김준환</td><td>110</td><td>104</td><td>6</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>김회용</td><td>91</td><td>86</td><td>5</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>최지훈</td><td>103</td><td>101</td><td>2</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>양서훈</td><td>101</td><td>100</td><td>1</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>이용</td><td>104</td><td>103</td><td>1</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>전지오</td><td>86</td><td>87</td><td>-1</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>박민웅</td><td>105</td><td>106</td><td>-1</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>김온</td><td>90</td><td>93</td><td>-3</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>주경필</td><td>91</td><td>96</td><td>-5</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>홍원욱</td><td>102</td><td>109</td><td>-7</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>계승범</td><td>103</td><td>111</td><td>-8</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>허성훈</td><td>110</td><td>119</td><td>-9</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>김린</td><td>95</td><td>105</td><td>-10</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="scoreboard-round">
+                    <h4 class="scoreboard-round__title">13회 · 2025.5.16 · 힐드로사이 CC Birch</h4>
+                    <div class="tableWrap tableWrap--scroll">
+                      <table class="scoreTable">
+                        <thead>
+                          <tr>
+                            <th scope="col">순위</th>
+                            <th scope="col">구분</th>
+                            <th scope="col">이름</th>
+                            <th scope="col">기준핸디</th>
+                            <th scope="col">당일 스코어</th>
+                            <th scope="col">핸디대비 최종</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr class="rank rank--1"><td><span class="medal medal--gold">🥇</span></td><td>MEMBER</td><td class="name">양서훈</td><td>101</td><td class="score">92</td><td>9</td></tr>
+                          <tr class="rank rank--2"><td><span class="medal medal--silver">🥈</span></td><td>MEMBER</td><td class="name">계승범</td><td>107</td><td class="score">100</td><td>7</td></tr>
+                          <tr><td></td><td>GUEST</td><td>이재상</td><td>101</td><td>100</td><td>1</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>홍원욱</td><td>106</td><td>106</td><td>-1</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>최지훈</td><td>102</td><td>104</td><td>-2</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>허성훈</td><td>115</td><td>116</td><td>-2</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>전지오</td><td>87</td><td>90</td><td>-4</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>문유석</td><td>95</td><td>100</td><td>-6</td></tr>
+                          <tr><td></td><td>GUEST</td><td>김준환</td><td>107</td><td>114</td><td>-7</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>주경필</td><td>94</td><td>102</td><td>-9</td></tr>
+                          <tr><td></td><td>GUEST</td><td>남홍균</td><td>94</td><td>106</td><td>-12</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>김선후</td><td>111</td><td>125</td><td>-14</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="scoreboard-round">
+                    <h4 class="scoreboard-round__title">14회 · 2025.7.4 · 더크로스비 CC 빌리</h4>
+                    <div class="tableWrap tableWrap--scroll">
+                      <table class="scoreTable">
+                        <thead>
+                          <tr>
+                            <th scope="col">순위</th>
+                            <th scope="col">구분</th>
+                            <th scope="col">이름</th>
+                            <th scope="col">기준핸디</th>
+                            <th scope="col">당일 스코어</th>
+                            <th scope="col">핸디대비 최종</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr class="rank rank--1"><td><span class="medal medal--gold">🥇</span></td><td>MEMBER</td><td class="name">허성훈</td><td>115</td><td class="score">103</td><td>12</td></tr>
+                          <tr class="rank rank--1"><td><span class="medal medal--gold">🥇</span></td><td>MEMBER</td><td class="name">김선후</td><td>118</td><td class="score">106</td><td>12</td></tr>
+                          <tr class="rank rank--2"><td><span class="medal medal--silver">🥈</span></td><td>MEMBER</td><td class="name">김온</td><td>92</td><td class="score">83</td><td>9</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>양서훈</td><td>96</td><td>92</td><td>4</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>전지오</td><td>88</td><td>85</td><td>3</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>계승범</td><td>104</td><td>103</td><td>1</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>김린</td><td>100</td><td>102</td><td>-2</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>김회용</td><td>89</td><td>93</td><td>-4</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>김영두</td><td>93</td><td>97</td><td>-4</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="scoreboard-round">
+                    <h4 class="scoreboard-round__title">15회 · 2025.9.26 · 써닝포인트 CC 포인트</h4>
+                    <div class="tableWrap tableWrap--scroll">
+                      <table class="scoreTable">
+                        <thead>
+                          <tr>
+                            <th scope="col">순위</th>
+                            <th scope="col">구분</th>
+                            <th scope="col">이름</th>
+                            <th scope="col">기준핸디</th>
+                            <th scope="col">당일 스코어</th>
+                            <th scope="col">핸디대비 최종</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr class="rank rank--1"><td><span class="medal medal--gold">🥇</span></td><td>MEMBER</td><td class="name">문유석</td><td>97</td><td class="score">82</td><td>15</td></tr>
+                          <tr class="rank rank--2"><td><span class="medal medal--silver">🥈</span></td><td>MEMBER</td><td class="name">주경필</td><td>98</td><td class="score">87</td><td>11</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>김준환</td><td>111</td><td>102</td><td>9</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>김온</td><td>88</td><td>86</td><td>2</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>김회용</td><td>91</td><td>89</td><td>2</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>양서훈</td><td>94</td><td>92</td><td>2</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>김선후</td><td>112</td><td>110</td><td>2</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>박민웅</td><td>106</td><td>105</td><td>1</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>허성훈</td><td>109</td><td>108</td><td>1</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>김영두</td><td>95</td><td>97</td><td>-2</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>계승범</td><td>104</td><td>107</td><td>-3</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>홍원욱</td><td>106</td><td>109</td><td>-3</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="scoreboard-round">
+                    <h4 class="scoreboard-round__title">16회 · 2025.11.7 · 베뉴지cc 지</h4>
+                    <div class="tableWrap tableWrap--scroll">
+                      <table class="scoreTable">
+                        <thead>
+                          <tr>
+                            <th scope="col">순위</th>
+                            <th scope="col">구분</th>
+                            <th scope="col">이름</th>
+                            <th scope="col">기준핸디</th>
+                            <th scope="col">당일 스코어</th>
+                            <th scope="col">핸디대비 최종</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr class="rank rank--1"><td><span class="medal medal--gold">🥇</span></td><td>MEMBER</td><td class="name">계승범</td><td>106</td><td class="score">100</td><td>6</td></tr>
+                          <tr class="rank rank--2"><td><span class="medal medal--silver">🥈</span></td><td>MEMBER</td><td class="name">주경필</td><td>93</td><td class="score">88</td><td>5</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>김회용</td><td>90</td><td>90</td><td>0</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>김영두</td><td>96</td><td>97</td><td>-1</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>전지오</td><td>87</td><td>89</td><td>-2</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>양서훈</td><td>93</td><td>95</td><td>-2</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>김린</td><td>101</td><td>104</td><td>-3</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>허성훈</td><td>109</td><td>116</td><td>-7</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>문유석</td><td>90</td><td>98</td><td>-8</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>김선후</td><td>111</td><td>119</td><td>-8</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>김준환</td><td>107</td><td>121</td><td>-14</td></tr>
+                          <tr><td></td><td>MEMBER</td><td>김온</td><td>87</td><td>102</td><td>-15</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MEMBERS -->
+      <section class="section" id="members" aria-label="회원 명단">
+        <div class="container">
+          <header class="section__header">
+            <h2 class="section__title">Members</h2>
+            <p class="section__subtitle">서로의 플레이 스타일을 존중하는 우리 멤버들</p>
+          </header>
+
+          <div class="membersGrid" aria-label="회원 카드 그리드">
+            <article class="memberCard" aria-label="회원 최지훈">
+              <div class="memberCard__top">
+                <div class="avatar" aria-hidden="true">JH</div>
+                <span class="tag">회장</span>
+              </div>
+              <h3 class="memberCard__name">최지훈</h3>
+              <dl class="memberMeta">
+                <div><dt>핸디캡</dt><dd>103</dd></div>
+                <div><dt>회비 입금월</dt><dd>7월 말</dd></div>
+              </dl>
+            </article>
+
+            <article class="memberCard" aria-label="회원 계승범">
+              <div class="memberCard__top">
+                <div class="avatar avatar--soft" aria-hidden="true">SB</div>
+                <span class="tag tag--soft">총무</span>
+              </div>
+              <h3 class="memberCard__name">계승범</h3>
+              <dl class="memberMeta">
+                <div><dt>핸디캡</dt><dd>103</dd></div>
+                <div><dt>회비 입금월</dt><dd>7월 말</dd></div>
+              </dl>
+            </article>
+
+            <article class="memberCard" aria-label="회원 전지오">
+              <div class="memberCard__top">
+                <div class="avatar avatar--dark" aria-hidden="true">JO</div>
+                <span class="tag tag--dark">고문</span>
+              </div>
+              <h3 class="memberCard__name">전지오</h3>
+              <dl class="memberMeta">
+                <div><dt>핸디캡</dt><dd>88</dd></div>
+                <div><dt>회비 입금월</dt><dd>7월 말</dd></div>
+              </dl>
+            </article>
+
+            <article class="memberCard" aria-label="회원 박민웅">
+              <div class="memberCard__top">
+                <div class="avatar" aria-hidden="true">MW</div>
+                <span class="tag">발기인</span>
+              </div>
+              <h3 class="memberCard__name">박민웅</h3>
+              <dl class="memberMeta">
+                <div><dt>핸디캡</dt><dd>106</dd></div>
+                <div><dt>회비 입금월</dt><dd>7월 말</dd></div>
+              </dl>
+            </article>
+
+            <article class="memberCard" aria-label="회원 이용">
+              <div class="memberCard__top">
+                <div class="avatar avatar--soft" aria-hidden="true">Y</div>
+                <span class="tag tag--soft">발기인</span>
+              </div>
+              <h3 class="memberCard__name">이용</h3>
+              <dl class="memberMeta">
+                <div><dt>핸디캡</dt><dd>104</dd></div>
+                <div><dt>회비 입금월</dt><dd>7월 말</dd></div>
+              </dl>
+            </article>
+
+            <article class="memberCard" aria-label="회원 김린">
+              <div class="memberCard__top">
+                <div class="avatar avatar--dark" aria-hidden="true">R</div>
+                <span class="tag tag--dark">정회원</span>
+              </div>
+              <h3 class="memberCard__name">김린</h3>
+              <dl class="memberMeta">
+                <div><dt>핸디캡</dt><dd>103</dd></div>
+                <div><dt>회비 입금월</dt><dd>3월 말</dd></div>
+              </dl>
+            </article>
+
+            <article class="memberCard" aria-label="회원 김선후">
+              <div class="memberCard__top">
+                <div class="avatar avatar--soft" aria-hidden="true">SH</div>
+                <span class="tag tag--soft">정회원</span>
+              </div>
+              <h3 class="memberCard__name">김선후</h3>
+              <dl class="memberMeta">
+                <div><dt>핸디캡</dt><dd>115</dd></div>
+                <div><dt>회비 입금월</dt><dd>2월 말</dd></div>
+              </dl>
+            </article>
+
+            <article class="memberCard" aria-label="회원 김영두">
+              <div class="memberCard__top">
+                <div class="avatar avatar--soft" aria-hidden="true">YD</div>
+                <span class="tag tag--soft">정회원</span>
+              </div>
+              <h3 class="memberCard__name">김영두</h3>
+              <dl class="memberMeta">
+                <div><dt>핸디캡</dt><dd>97</dd></div>
+                <div><dt>회비 입금월</dt><dd>10월 말</dd></div>
+              </dl>
+            </article>
+
+            <article class="memberCard" aria-label="회원 김온">
+              <div class="memberCard__top">
+                <div class="avatar" aria-hidden="true">O</div>
+                <span class="tag">정회원</span>
+              </div>
+              <h3 class="memberCard__name">김온</h3>
+              <dl class="memberMeta">
+                <div><dt>핸디캡</dt><dd>95</dd></div>
+                <div><dt>회비 입금월</dt><dd>11월 말</dd></div>
+              </dl>
+            </article>
+
+            <article class="memberCard memberCard--inactive" aria-label="회원 김지진">
+              <div class="memberCard__top">
+                <div class="avatar" aria-hidden="true">JJ</div>
+                <span class="tag tag--soft">휴면회원</span>
+              </div>
+              <h3 class="memberCard__name">김지진 <span class="statusChip statusChip--inactive">휴면</span></h3>
+              <dl class="memberMeta">
+                <div><dt>핸디캡</dt><dd>105</dd></div>
+                <div><dt>회비 입금월</dt><dd>10월 말</dd></div>
+              </dl>
+            </article>
+
+            <article class="memberCard" aria-label="회원 김준환">
+              <div class="memberCard__top">
+                <div class="avatar" aria-hidden="true">JH</div>
+                <span class="tag">정회원</span>
+              </div>
+              <h3 class="memberCard__name">김준환</h3>
+              <dl class="memberMeta">
+                <div><dt>핸디캡</dt><dd>114</dd></div>
+                <div><dt>회비 입금월</dt><dd>8월 말</dd></div>
+              </dl>
+            </article>
+
+            <article class="memberCard" aria-label="회원 김회용">
+              <div class="memberCard__top">
+                <div class="avatar avatar--dark" aria-hidden="true">HY</div>
+                <span class="tag tag--dark">정회원</span>
+              </div>
+              <h3 class="memberCard__name">김회용</h3>
+              <dl class="memberMeta">
+                <div><dt>핸디캡</dt><dd>90</dd></div>
+                <div><dt>회비 입금월</dt><dd>3월 말</dd></div>
+              </dl>
+            </article>
+
+            <article class="memberCard" aria-label="회원 문유석">
+              <div class="memberCard__top">
+                <div class="avatar avatar--soft" aria-hidden="true">YS</div>
+                <span class="tag tag--soft">정회원</span>
+              </div>
+              <h3 class="memberCard__name">문유석</h3>
+              <dl class="memberMeta">
+                <div><dt>핸디캡</dt><dd>94</dd></div>
+                <div><dt>회비 입금월</dt><dd>7월 말</dd></div>
+              </dl>
+            </article>
+
+            <article class="memberCard memberCard--inactive" aria-label="회원 양서훈">
+              <div class="memberCard__top">
+                <div class="avatar avatar--dark" aria-hidden="true">SH</div>
+                <span class="tag tag--dark">휴면회원</span>
+              </div>
+              <h3 class="memberCard__name">양서훈 <span class="statusChip statusChip--inactive">휴면</span></h3>
+              <dl class="memberMeta">
+                <div><dt>핸디캡</dt><dd>94</dd></div>
+                <div><dt>회비 입금월</dt><dd>3월 말 (1년 홀딩)</dd></div>
+              </dl>
+            </article>
+
+            <article class="memberCard" aria-label="회원 오수창">
+              <div class="memberCard__top">
+                <div class="avatar avatar--dark" aria-hidden="true">SC</div>
+                <span class="tag tag--dark">정회원</span>
+              </div>
+              <h3 class="memberCard__name">오수창</h3>
+              <dl class="memberMeta">
+                <div><dt>핸디캡</dt><dd>115</dd></div>
+                <div><dt>회비 입금월</dt><dd>3월 말 (6개월 유예)</dd></div>
+              </dl>
+            </article>
+
+            <article class="memberCard" aria-label="회원 주경필">
+              <div class="memberCard__top">
+                <div class="avatar" aria-hidden="true">GP</div>
+                <span class="tag">정회원</span>
+              </div>
+              <h3 class="memberCard__name">주경필</h3>
+              <dl class="memberMeta">
+                <div><dt>핸디캡</dt><dd>91</dd></div>
+                <div><dt>회비 입금월</dt><dd>3월 말</dd></div>
+              </dl>
+            </article>
+
+            <article class="memberCard memberCard--inactive" aria-label="회원 홍원욱">
+              <div class="memberCard__top">
+                <div class="avatar avatar--soft" aria-hidden="true">WU</div>
+                <span class="tag tag--soft">휴면회원</span>
+              </div>
+              <h3 class="memberCard__name">홍원욱 <span class="statusChip statusChip--inactive">휴면</span></h3>
+              <dl class="memberMeta">
+                <div><dt>핸디캡</dt><dd>108</dd></div>
+                <div><dt>회비 입금월</dt><dd>10월 말 (1년 홀딩)</dd></div>
+              </dl>
+            </article>
+
+            <article class="memberCard" aria-label="회원 허성훈">
+              <div class="memberCard__top">
+                <div class="avatar avatar--dark" aria-hidden="true">SH</div>
+                <span class="tag tag--dark">정회원</span>
+              </div>
+              <h3 class="memberCard__name">허성훈</h3>
+              <dl class="memberMeta">
+                <div><dt>핸디캡</dt><dd>113</dd></div>
+                <div><dt>회비 입금월</dt><dd>4월 말</dd></div>
+              </dl>
+            </article>
+          </div>
+
+          <div class="tableCard mt-24" role="region" aria-label="핸디캡 순위 표">
+            <div class="tableCard__head">
+              <div>
+                <strong>핸디캡 순위</strong>
+              </div>
+            </div>
+
+            <div class="tableWrap tableWrap--scroll" role="table" aria-label="핸디캡 순위">
+              <table class="scoreTable">
+                <thead>
+                  <tr>
+                    <th scope="col">순위</th>
+                    <th scope="col">이름</th>
+                    <th scope="col">직책</th>
+                    <th scope="col">핸디캡</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="rank rank--1"><td><span class="medal medal--gold">🥇</span> <span class="rankNum">1</span></td><td class="name">전지오</td><td>고문</td><td class="score">88</td></tr>
+                  <tr class="rank rank--2"><td><span class="medal medal--silver">🥈</span> <span class="rankNum">2</span></td><td class="name">김회용</td><td>정회원</td><td class="score">90</td></tr>
+                  <tr class="rank rank--3"><td><span class="medal medal--bronze">🥉</span> <span class="rankNum">3</span></td><td class="name">주경필</td><td>정회원</td><td class="score">91</td></tr>
+                  <tr><td><span class="rankNum">4</span> <span class="tieMedal" title="동순위">동</span></td><td class="name">문유석</td><td>정회원</td><td class="score">94</td></tr>
+                  <tr><td><span class="rankNum">4</span> <span class="tieMedal" title="동순위">동</span></td><td class="name">양서훈 <span class="statusChip statusChip--inactive">휴면</span></td><td>휴면회원</td><td class="score">94</td></tr>
+                  <tr><td><span class="rankNum">6</span></td><td class="name">김온</td><td>정회원</td><td class="score">95</td></tr>
+                  <tr><td><span class="rankNum">7</span></td><td class="name">김영두</td><td>정회원</td><td class="score">97</td></tr>
+                  <tr><td><span class="rankNum">8</span> <span class="tieMedal" title="동순위">동</span></td><td class="name">김린</td><td>정회원</td><td class="score">103</td></tr>
+                  <tr><td><span class="rankNum">8</span> <span class="tieMedal" title="동순위">동</span></td><td class="name">최지훈</td><td>회장</td><td class="score">103</td></tr>
+                  <tr><td><span class="rankNum">8</span> <span class="tieMedal" title="동순위">동</span></td><td class="name">계승범</td><td>총무</td><td class="score">103</td></tr>
+                  <tr><td><span class="rankNum">11</span></td><td class="name">이용</td><td>발기인</td><td class="score">104</td></tr>
+                  <tr><td><span class="rankNum">12</span></td><td class="name">김지진 <span class="statusChip statusChip--inactive">휴면</span></td><td>휴면회원</td><td class="score">105</td></tr>
+                  <tr><td><span class="rankNum">13</span></td><td class="name">박민웅</td><td>발기인</td><td class="score">106</td></tr>
+                  <tr><td><span class="rankNum">14</span></td><td class="name">홍원욱 <span class="statusChip statusChip--inactive">휴면</span></td><td>휴면회원</td><td class="score">108</td></tr>
+                  <tr><td><span class="rankNum">15</span></td><td class="name">허성훈</td><td>정회원</td><td class="score">113</td></tr>
+                  <tr><td><span class="rankNum">16</span></td><td class="name">김준환</td><td>정회원</td><td class="score">114</td></tr>
+                  <tr><td><span class="rankNum">17</span> <span class="tieMedal" title="동순위">동</span></td><td class="name">김선후</td><td>정회원</td><td class="score">115</td></tr>
+                  <tr><td><span class="rankNum">17</span> <span class="tieMedal" title="동순위">동</span></td><td class="name">오수창</td><td>정회원</td><td class="score">115</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- RSVP -->
+      <section class="section section--alt" id="rsvp" aria-label="2026년 정규 라운딩 일정">
+        <div class="container">
+          <header class="section__header">
+            <h2 class="section__title">RSVP</h2>
+            <p class="section__subtitle">2026년 정규 라운딩 일정 (연 5회)</p>
+          </header>
+
+          <div class="grid-3">
+            <article class="eventCard eventCard--schedule">
+              <div class="eventCard__stack">
+                <div class="eventCard__top">
+                  <span class="eventTag">정규</span>
+                  <span class="muted">2026</span>
+                </div>
+                <h3 class="eventCard__title">4월 15일 (수)</h3>
+                <ul class="eventMeta">
+                  <li><strong>장소</strong> 써닝포인트 CC</li>
+                  <li><strong>Tee-Up 시간</strong> 07:21</li>
+                </ul>
+                <div class="eventCard__detail" id="eventDetail-1" role="region" aria-labelledby="eventExpand-1" aria-hidden="true" style="display: none">
+                  <div class="rsvpDetail" aria-label="4월 15일 조 편성 및 식당 안내">
+                    <div class="rsvpDetail__section">
+                      <div class="rsvpDetail__titleRow">
+                        <span class="rsvpDetail__icon" aria-hidden="true">⛳</span>
+                        <strong class="rsvpDetail__title">조 편성</strong>
+                      </div>
+
+                      <div class="rsvpTableWrap" role="region" aria-label="조 편성 표">
+                        <table class="rsvpTable" aria-label="조 편성">
+                          <thead>
+                            <tr>
+                              <th scope="col">조</th>
+                              <th scope="col">Tee-Up</th>
+                              <th scope="col">조장</th>
+                              <th scope="col">인원</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td><strong>1조</strong></td>
+                              <td>07:21</td>
+                              <td>전지오</td>
+                              <td>전지오 · 최지훈 · 김영두 · 김선후</td>
+                            </tr>
+                            <tr>
+                              <td><strong>2조</strong></td>
+                              <td>07:28</td>
+                              <td>김온</td>
+                              <td>김온 · 김회용 · 계승범 · 허성훈</td>
+                            </tr>
+                            <tr>
+                              <td><strong>3조</strong></td>
+                              <td>07:35</td>
+                              <td>박민웅</td>
+                              <td>박민웅 · 양혜윤 · 문유석 · 이용</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <div class="rsvpDetail__section">
+                      <div class="rsvpDetail__titleRow">
+                        <span class="rsvpDetail__icon" aria-hidden="true">🍴</span>
+                        <strong class="rsvpDetail__title">식당 정보</strong>
+                      </div>
+
+                      <div class="eatGrid" aria-label="식사 장소 안내">
+                        <div class="eatCard">
+                          <div class="eatCard__head">
+                            <strong class="eatCard__meal">아침</strong>
+                            <span class="eatCard__time">오전 6시 집합</span>
+                          </div>
+                          <div class="eatCard__name">운중양평해장국설렁탕</div>
+                          <a class="eatCard__link" href="https://naver.me/FSw7lGGm" target="_blank" rel="noopener noreferrer">지도 열기</a>
+                        </div>
+
+                        <div class="eatCard">
+                          <div class="eatCard__head">
+                            <strong class="eatCard__meal">점심</strong>
+                            <span class="eatCard__time">12:00 ~ 12:30 예약</span>
+                          </div>
+                          <div class="eatCard__name">혜인쌈밥&명태어장쭈갑골</div>
+                          <a class="eatCard__link" href="https://naver.me/5nerTzLt" target="_blank" rel="noopener noreferrer">지도 열기</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="eventCard__expand" aria-expanded="false" aria-controls="eventDetail-1" id="eventExpand-1" aria-label="세부 안내 펼치기">+</button>
+            </article>
+
+            <article class="eventCard eventCard--schedule">
+              <div class="eventCard__stack">
+                <div class="eventCard__top">
+                  <span class="eventTag eventTag--soft">정규</span>
+                  <span class="muted">2026</span>
+                </div>
+                <h3 class="eventCard__title">6월 26일 (금)</h3>
+                <ul class="eventMeta">
+                  <li><strong>장소</strong> 미정</li>
+                  <li><strong>Tee-Up 시간</strong> 미정</li>
+                </ul>
+                <div class="eventCard__detail" id="eventDetail-2" role="region" aria-labelledby="eventExpand-2" aria-hidden="true" style="display: none">
+                  <div class="rsvpDetail__empty" aria-label="세부 안내 없음"></div>
+                </div>
+              </div>
+              <button type="button" class="eventCard__expand" aria-expanded="false" aria-controls="eventDetail-2" id="eventExpand-2" aria-label="세부 안내 펼치기">+</button>
+            </article>
+
+            <article class="eventCard eventCard--schedule">
+              <div class="eventCard__stack">
+                <div class="eventCard__top">
+                  <span class="eventTag eventTag--dark">정규</span>
+                  <span class="muted">2026</span>
+                </div>
+                <h3 class="eventCard__title">7월 12일 (일)</h3>
+                <ul class="eventMeta">
+                  <li><strong>장소</strong> 미정</li>
+                  <li><strong>Tee-Up 시간</strong> 미정</li>
+                </ul>
+                <div class="eventCard__detail" id="eventDetail-3" role="region" aria-labelledby="eventExpand-3" aria-hidden="true" style="display: none">
+                  <div class="rsvpDetail__empty" aria-label="세부 안내 없음"></div>
+                </div>
+              </div>
+              <button type="button" class="eventCard__expand" aria-expanded="false" aria-controls="eventDetail-3" id="eventExpand-3" aria-label="세부 안내 펼치기">+</button>
+            </article>
+          </div>
+
+          <div class="grid-2 mt-24">
+            <article class="eventCard eventCard--schedule">
+              <div class="eventCard__stack">
+                <div class="eventCard__top">
+                  <span class="eventTag">정규</span>
+                  <span class="muted">2026</span>
+                </div>
+                <h3 class="eventCard__title">9월 18일 (금)</h3>
+                <ul class="eventMeta">
+                  <li><strong>장소</strong> 미정</li>
+                  <li><strong>Tee-Up 시간</strong> 미정</li>
+                </ul>
+                <div class="eventCard__detail" id="eventDetail-4" role="region" aria-labelledby="eventExpand-4" aria-hidden="true" style="display: none">
+                  <div class="rsvpDetail__empty" aria-label="세부 안내 없음"></div>
+                </div>
+              </div>
+              <button type="button" class="eventCard__expand" aria-expanded="false" aria-controls="eventDetail-4" id="eventExpand-4" aria-label="세부 안내 펼치기">+</button>
+            </article>
+
+            <article class="eventCard eventCard--schedule">
+              <div class="eventCard__stack">
+                <div class="eventCard__top">
+                  <span class="eventTag eventTag--dark">정규</span>
+                  <span class="muted">2026</span>
+                </div>
+                <h3 class="eventCard__title">11월 6일 (금)</h3>
+                <ul class="eventMeta">
+                  <li><strong>장소</strong> 미정</li>
+                  <li><strong>Tee-Up 시간</strong> 미정</li>
+                </ul>
+                <div class="eventCard__detail" id="eventDetail-5" role="region" aria-labelledby="eventExpand-5" aria-hidden="true" style="display: none">
+                  <div class="rsvpDetail__empty" aria-label="세부 안내 없음"></div>
+                </div>
+              </div>
+              <button type="button" class="eventCard__expand" aria-expanded="false" aria-controls="eventDetail-5" id="eventExpand-5" aria-label="세부 안내 펼치기">+</button>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- GALLERY -->
+      <section class="section" id="gallery" aria-label="사진첩">
+        <div class="container">
+          <header class="section__header">
+            <h2 class="section__title">Gallery</h2>
+            <p class="section__subtitle">라운딩 사진 모음</p>
+          </header>
+
+          <div class="gallery" aria-label="사진 그리드">
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_00.jpg" alt="라운딩 사진 01" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_01.jpg" alt="라운딩 사진 02" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_02.jpg" alt="라운딩 사진 03" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_03.jpg" alt="라운딩 사진 04" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_04.jpg" alt="라운딩 사진 05" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_05.jpg" alt="라운딩 사진 06" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_06.jpg" alt="라운딩 사진 07" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_07.jpg" alt="라운딩 사진 08" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_08.jpg" alt="라운딩 사진 09" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_09.jpg" alt="라운딩 사진 10" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_10.jpg" alt="라운딩 사진 11" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_11.jpg" alt="라운딩 사진 12" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_12.jpg" alt="라운딩 사진 13" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_13.jpg" alt="라운딩 사진 14" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_14.jpg" alt="라운딩 사진 15" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_15.jpg" alt="라운딩 사진 16" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_16.jpg" alt="라운딩 사진 17" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_17.jpg" alt="라운딩 사진 18" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_18.jpg" alt="라운딩 사진 19" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_19.jpg" alt="라운딩 사진 20" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_20.jpg" alt="라운딩 사진 21" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_21.jpg" alt="라운딩 사진 22" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_22.jpg" alt="라운딩 사진 23" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_23.jpg" alt="라운딩 사진 24" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_24.jpg" alt="라운딩 사진 25" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_25.jpg" alt="라운딩 사진 26" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_26.jpg" alt="라운딩 사진 27" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_27.jpg" alt="라운딩 사진 28" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_28.jpg" alt="라운딩 사진 29" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_223210089_29.jpg" alt="라운딩 사진 30" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_224846232_00.jpg" alt="라운딩 사진 31" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_224846232_01.jpg" alt="라운딩 사진 32" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_224846232_02.jpg" alt="라운딩 사진 33" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_224846232_03.jpg" alt="라운딩 사진 34" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_224846232_04.jpg" alt="라운딩 사진 35" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_224846232_05.jpg" alt="라운딩 사진 36" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_224846232_06.jpg" alt="라운딩 사진 37" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_224846232_07.jpg" alt="라운딩 사진 38" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_224846232_08.jpg" alt="라운딩 사진 39" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_224846232_09.jpg" alt="라운딩 사진 40" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_224846232_10.jpg" alt="라운딩 사진 41" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_224846232_11.jpg" alt="라운딩 사진 42" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_224846232_12.jpg" alt="라운딩 사진 43" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_224846232_13.jpg" alt="라운딩 사진 44" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_224846232_14.jpg" alt="라운딩 사진 45" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_224846232_15.jpg" alt="라운딩 사진 46" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_224846232_16.jpg" alt="라운딩 사진 47" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_224846232_17.jpg" alt="라운딩 사진 48" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_224846232_18.jpg" alt="라운딩 사진 49" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_224846232_19.jpg" alt="라운딩 사진 50" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_224846232_20.jpg" alt="라운딩 사진 51" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_224846232_21.jpg" alt="라운딩 사진 52" loading="lazy" /></figure>
+            <figure class="shot"><img class="shot__img" src="./images/KakaoTalk_20260317_224846232_22.jpg" alt="라운딩 사진 53" loading="lazy" /></figure>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer" aria-label="푸터">
+        <div class="container footer__inner">
+          <div class="footer__left">
+            <div class="footer__brand">
+              <span class="brand__mark" aria-hidden="true"></span>
+              <span>
+                <strong>고라베 Golf Club</strong>
+                <span class="muted">· Since 2022</span>
+              </span>
+            </div>
+            <p class="muted">문의: 총무에게 카카오톡/문자로 연락 주세요.</p>
+          </div>
+          <div class="footer__right">
+            <a class="footer__link" href="#top">맨 위로</a>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script src="./script.js" defer></script>
+  </body>
+</html>
+
