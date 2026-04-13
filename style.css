@@ -596,12 +596,12 @@ img{ max-width: 100%; display: block; }
 }
 .scoreTable--handicap th:nth-child(1),
 .scoreTable--handicap td:nth-child(1){
-  width: 22%;
+  width: 20%;
   white-space: nowrap;
 }
 .scoreTable--handicap th:nth-child(2),
 .scoreTable--handicap td:nth-child(2){
-  width: 36%;
+  width: 30%;
   min-width: 0;
   max-width: 0;
   overflow: hidden;
@@ -610,13 +610,13 @@ img{ max-width: 100%; display: block; }
 }
 .scoreTable--handicap th:nth-child(3),
 .scoreTable--handicap td:nth-child(3){
-  width: 14%;
-  text-align: right;
+  width: 12%;
+  text-align: center;
   white-space: nowrap;
 }
 .scoreTable--handicap th:nth-child(4),
 .scoreTable--handicap td:nth-child(4){
-  width: 28%;
+  width: 38%;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -627,29 +627,63 @@ img{ max-width: 100%; display: block; }
   font-variant-numeric: tabular-nums;
 }
 @media (max-width: 640px){
+  /* 핸디캡 순위: 모바일에서 열을 데이터 폭에 가깝게, 가로 스크롤 최소화 */
+  .tableWrap--handicap.tableWrap--scroll{
+    overflow-x: hidden;
+  }
   .tableWrap--handicap .scoreTable--handicap{
-    font-size: 12px;
+    table-layout: auto;
+    width: 100%;
+    min-width: 0 !important;
+    font-size: 11px;
   }
   .tableWrap--handicap .scoreTable--handicap th,
   .tableWrap--handicap .scoreTable--handicap td{
-    padding: 8px 6px;
+    padding: 4px 3px;
   }
   .tableWrap--handicap .scoreTable--handicap th{
-    font-size: 10px;
-    letter-spacing: .04em;
+    font-size: 9px;
+    letter-spacing: .02em;
+    text-transform: none;
+  }
+  /* 고정 % 해제 → 내용에 맞춘 너비 */
+  .tableWrap--handicap .scoreTable--handicap th:nth-child(1),
+  .tableWrap--handicap .scoreTable--handicap td:nth-child(1){
+    width: auto;
+    max-width: 4.5rem;
+  }
+  .tableWrap--handicap .scoreTable--handicap th:nth-child(2),
+  .tableWrap--handicap .scoreTable--handicap td:nth-child(2){
+    width: auto;
+    min-width: 0;
+    max-width: 32vw;
+  }
+  .tableWrap--handicap .scoreTable--handicap th:nth-child(3),
+  .tableWrap--handicap .scoreTable--handicap td:nth-child(3){
+    width: auto;
+    max-width: 2.75rem;
+    text-align: center;
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+  .tableWrap--handicap .scoreTable--handicap th:nth-child(4),
+  .tableWrap--handicap .scoreTable--handicap td:nth-child(4){
+    width: auto;
+    max-width: 26vw;
   }
   .tableWrap--handicap .scoreTable--handicap .medal{
-    width: 22px;
-    height: 22px;
-    font-size: 12px;
+    width: 18px;
+    height: 18px;
+    font-size: 11px;
   }
   .tableWrap--handicap .scoreTable--handicap .tieMedal{
-    font-size: 9px;
-    padding: 1px 5px;
+    font-size: 8px;
+    padding: 0 3px;
+    margin-left: 2px;
   }
   .tableWrap--handicap .scoreTable--handicap .statusChip{
-    font-size: 9px;
-    padding: 0 4px;
+    font-size: 8px;
+    padding: 0 3px;
     margin-left: 2px;
   }
 }
@@ -657,6 +691,10 @@ img{ max-width: 100%; display: block; }
   width: 100%;
   border-collapse: collapse;
   min-width: 520px;
+}
+/* 핸디캡 순위 표는 좁은 화면에서 520px 최소폭으로 가로 스크롤이 생기지 않도록 */
+.scoreTable.scoreTable--handicap{
+  min-width: 0;
 }
 .scoreboard-round{
   margin-bottom: 24px;
