@@ -80,6 +80,68 @@
     });
   });
 
+  // Members: handicap auto sort (cards + handicap table)
+  {
+    const membersSection = $("#members");
+    const membersGrid = membersSection && $(".membersGrid", membersSection);
+    if (membersGrid) {
+      const cards = $$(".memberCard", membersGrid);
+      cards
+        .sort((a, b) => {
+          const aHandi = Number.parseInt(($(".memberMeta dd", a)?.textContent || "").trim(), 10);
+          const bHandi = Number.parseInt(($(".memberMeta dd", b)?.textContent || "").trim(), 10);
+          const safeA = Number.isFinite(aHandi) ? aHandi : Number.MAX_SAFE_INTEGER;
+          const safeB = Number.isFinite(bHandi) ? bHandi : Number.MAX_SAFE_INTEGER;
+          if (safeA !== safeB) return safeA - safeB;
+          const aName = ($(".memberCard__name", a)?.childNodes?.[0]?.textContent || "").trim();
+          const bName = ($(".memberCard__name", b)?.childNodes?.[0]?.textContent || "").trim();
+          return aName.localeCompare(bName, "ko");
+        })
+        .forEach((card) => membersGrid.appendChild(card));
+    }
+
+    const handicapBody = membersSection && $(".scoreTable--handicap tbody", membersSection);
+    if (handicapBody) {
+      const rows = $$("tr", handicapBody);
+      const parsed = rows.map((row) => {
+        const score = Number.parseInt(($("td:nth-child(3)", row)?.textContent || "").trim(), 10);
+        const name = (($("td:nth-child(2)", row)?.textContent || "").replace(/\s+/g, " ").trim());
+        return { row, score: Number.isFinite(score) ? score : Number.MAX_SAFE_INTEGER, name };
+      });
+      parsed.sort((a, b) => (a.score !== b.score ? a.score - b.score : a.name.localeCompare(b.name, "ko")));
+
+      let prevScore = null;
+      let currentRank = 0;
+      parsed.forEach((item, idx) => {
+        if (item.score !== prevScore) currentRank = idx + 1;
+        prevScore = item.score;
+        item.row.dataset.rank = String(currentRank);
+      });
+
+      parsed.forEach((item, idx) => {
+        const row = item.row;
+        const rank = Number.parseInt(row.dataset.rank || String(idx + 1), 10);
+        const tied = parsed.some((p, i) => i !== idx && p.score === item.score);
+        const rankCell = $("td:first-child", row);
+        row.classList.remove("rank", "rank--1", "rank--2", "rank--3");
+        if (rankCell) {
+          rankCell.innerHTML = `<span class="rankNum">${rank}</span>${tied ? ' <span class="tieMedal" title="동순위">동</span>' : ""}`;
+        }
+        if (rank === 1) {
+          row.classList.add("rank", "rank--1");
+          if (rankCell) rankCell.innerHTML = `<span class="medal medal--gold">🥇</span> <span class="rankNum">${rank}</span>`;
+        } else if (rank === 2) {
+          row.classList.add("rank", "rank--2");
+          if (rankCell) rankCell.innerHTML = `<span class="medal medal--silver">🥈</span> <span class="rankNum">${rank}</span>`;
+        } else if (rank === 3) {
+          row.classList.add("rank", "rank--3");
+          if (rankCell) rankCell.innerHTML = `<span class="medal medal--bronze">🥉</span> <span class="rankNum">${rank}</span>`;
+        }
+        handicapBody.appendChild(row);
+      });
+    }
+  }
+
   // Next Round (nearest upcoming regular round)
   {
     const elMain = $("#nextRoundMain");
