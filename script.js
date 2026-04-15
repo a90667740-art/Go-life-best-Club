@@ -203,5 +203,53 @@
       }
     });
   }
+
+  // Gallery newest-first order:
+  // Add new image paths to the start of this array to show first.
+  {
+    const gallery = $("#gallery .gallery");
+    if (gallery) {
+      const latestGalleryImages = [
+        "./images/sunning12.jpg",
+        "./images/sunning11.jpg",
+        "./images/sunning10.jpg",
+        "./images/sunning9.jpg",
+        "./images/sunning8.jpg",
+        "./images/sunning7.jpg",
+        "./images/sunning6.jpg",
+        "./images/sunning5.jpg",
+        "./images/sunning4.jpg",
+        "./images/sunning3.jpg",
+        "./images/sunning2.jpg",
+        "./images/sunning1.jpg",
+      ];
+
+      const figures = $$(".shot", gallery);
+      const figureBySrc = new Map();
+      figures.forEach((figure) => {
+        const img = $(".shot__img", figure);
+        if (!img) return;
+        const src = img.getAttribute("src");
+        if (!src) return;
+        figureBySrc.set(src, figure);
+      });
+
+      const existingSrcs = figures
+        .map((figure) => $(".shot__img", figure)?.getAttribute("src"))
+        .filter(Boolean);
+
+      const latestSet = new Set(latestGalleryImages);
+      const orderedSrcs = [
+        ...latestGalleryImages.filter((src) => figureBySrc.has(src)),
+        ...existingSrcs.filter((src) => !latestSet.has(src)),
+      ];
+
+      // Re-append in newest-first order; keeps current grid styles intact.
+      orderedSrcs.forEach((src) => {
+        const figure = figureBySrc.get(src);
+        if (figure) gallery.appendChild(figure);
+      });
+    }
+  }
 })();
 
