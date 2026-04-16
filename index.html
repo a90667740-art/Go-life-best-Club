@@ -981,6 +981,19 @@
             <p class="matchupHeader__sub">6월 26일 단발성 Event 입니다.</p>
           </header>
 
+          <div class="matchupCountdown" id="matchupCountdown" aria-live="polite">
+            <p class="matchupCountdown__line" id="matchupCountdownLine">
+              <span class="matchupCountdown__prefix">베팅 마감까지 남은 시간:</span>
+              <span class="matchupCountdown__clock" id="matchupCountdownClock">
+                <span class="matchupCountdown__unit"><span id="matchupCdDays">00</span>일</span>
+                <span class="matchupCountdown__unit"><span id="matchupCdHours">00</span>시간</span>
+                <span class="matchupCountdown__unit"><span id="matchupCdMins">00</span>분</span>
+                <span class="matchupCountdown__unit"><span id="matchupCdSecs">00</span>초</span>
+              </span>
+            </p>
+            <p class="matchupCountdown__expired" id="matchupCountdownExpired" hidden>베팅이 종료되었습니다</p>
+          </div>
+
           <div class="matchupDash" data-matchup-root>
             <div class="matchupBoard">
               <div class="matchupBoard__grid">
@@ -1137,6 +1150,7 @@
                       <th scope="col">이름</th>
                       <th scope="col">대상</th>
                       <th scope="col" class="matchupTable__thNum">금액</th>
+                      <th scope="col" class="matchupTable__thNum matchupTable__thPayout">예상 환급금</th>
                       <th scope="col" class="matchupTable__thAct">
                         <span class="sr-only">내 베팅 삭제</span>
                       </th>
@@ -1144,7 +1158,7 @@
                   </thead>
                   <tbody id="matchupHistoryBody">
                     <tr class="matchupTable__placeholder">
-                      <td colspan="5">불러오는 중…</td>
+                      <td colspan="6">불러오는 중…</td>
                     </tr>
                   </tbody>
                 </table>

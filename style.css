@@ -1326,6 +1326,62 @@ tr.rank td:first-child{ white-space: nowrap; }
   line-height: 1.55;
   color: rgba(236, 244, 240, .66);
 }
+.matchupCountdown{
+  max-width: 920px;
+  margin: -8px auto 20px;
+  padding: 14px 16px;
+  text-align: center;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(232, 200, 114, .18);
+  background: rgba(0, 0, 0, .28);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .25);
+}
+.matchupCountdown__line{
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(236, 244, 240, .82);
+}
+.matchupCountdown__prefix{
+  font-weight: 600;
+  color: rgba(236, 244, 240, .72);
+}
+.matchupCountdown__clock{
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  color: var(--matchup-gold);
+}
+.matchupCountdown__unit{
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+}
+.matchupCountdown__unit span:first-child{
+  min-width: 2ch;
+}
+.matchupCountdown__expired{
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: rgba(255, 200, 200, .92);
+}
+.matchup--closed .matchupForm__submit{
+  opacity: .45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
 .matchupDash{
   max-width: 920px;
   margin: 0 auto;
@@ -1451,6 +1507,7 @@ tr.rank td:first-child{ white-space: nowrap; }
   color: #fff;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
+  transition: color .35s ease, transform .35s ease;
 }
 .matchupBoard__vsCol{
   display: flex;
@@ -1570,6 +1627,7 @@ tr.rank td:first-child{ white-space: nowrap; }
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   color: rgba(255, 255, 255, .94);
+  transition: color .35s ease;
 }
 
 .matchupForm{
@@ -1780,14 +1838,19 @@ tr.rank td:first-child{ white-space: nowrap; }
 .matchupTable__thNum{
   text-align: right;
 }
+.matchupTable__thPayout{
+  min-width: 7.5rem;
+}
 .matchupTable__thAct{
-  width: 44px;
+  width: 4.5rem;
+  min-width: 4.5rem;
   padding-left: 4px !important;
   padding-right: 8px !important;
   text-align: center;
 }
 .matchupTable__act{
-  width: 44px;
+  width: 4.5rem;
+  min-width: 4.5rem;
   padding: 8px 6px !important;
   text-align: center;
   vertical-align: middle;
@@ -1796,31 +1859,37 @@ tr.rank td:first-child{ white-space: nowrap; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  padding: 0;
+  gap: 5px;
+  min-height: 32px;
+  padding: 6px 8px;
   border: none;
   border-radius: 10px;
   background: transparent;
-  color: rgba(236, 244, 240, .38);
+  color: #f87171;
   cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
   transition: color .15s ease, background .15s ease, transform .15s ease;
 }
+.matchupTable__delTxt{
+  line-height: 1;
+}
 .matchupTable__del:hover{
-  color: rgba(255, 180, 170, .95);
-  background: rgba(255, 80, 80, .1);
+  color: #fecaca;
+  background: rgba(248, 113, 113, .18);
 }
 .matchupTable__del:active{
-  transform: scale(.94);
+  transform: scale(.97);
 }
 .matchupTable__del:disabled{
-  opacity: .35;
+  opacity: .45;
   cursor: wait;
   pointer-events: none;
 }
 .matchupTable__delIcon{
   display: block;
   flex-shrink: 0;
+  color: inherit;
 }
 @media (prefers-reduced-motion: reduce){
   .matchupTable__del:active{ transform: none; }
@@ -1839,6 +1908,25 @@ tr.rank td:first-child{ white-space: nowrap; }
   text-align: right;
   font-weight: 700;
   color: var(--matchup-gold);
+  transition: color .35s ease, transform .35s ease;
+}
+.matchupTable__payoutEst{
+  text-align: right;
+  font-weight: 700;
+  color: rgba(255, 250, 235, .92);
+  transition: color .35s ease, transform .35s ease;
+}
+.matchupTable__cell--pulse{
+  animation: matchupTableCellPulse .5s ease;
+}
+@keyframes matchupTableCellPulse{
+  0%{ color: inherit; transform: scale(1); }
+  40%{ color: var(--matchup-gold); transform: scale(1.02); }
+  100%{ color: inherit; transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce){
+  .matchupTable__cell--pulse{ animation: none; }
+  .matchupTable__num, .matchupTable__payoutEst{ transition: none; }
 }
 .matchupTable__empty,
 .matchupTable__placeholder td{

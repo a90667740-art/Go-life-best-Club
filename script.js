@@ -259,7 +259,20 @@
 
     const root = $("#matchup");
     if (root) {
-      const MY_BET_IDS_KEY = "golife_matchup_my_bet_ids";
+      const MY_BET_IDS_KEY = "my_bet_ids";
+      const LEGACY_MY_BET_IDS_KEY = "golife_matchup_my_bet_ids";
+      try {
+        if (!localStorage.getItem(MY_BET_IDS_KEY) && localStorage.getItem(LEGACY_MY_BET_IDS_KEY)) {
+          localStorage.setItem(MY_BET_IDS_KEY, localStorage.getItem(LEGACY_MY_BET_IDS_KEY));
+        }
+      } catch {
+        /* noop */
+      }
+
+      const BET_DEADLINE_MS = new Date(2026, 5, 25, 12, 0, 0).getTime();
+      let countdownTimer = null;
+      let matchupSubmitBusy = false;
+      const prevRowSnapshot = new Map();
 
       const loadMyBetIds = () => {
         try {
@@ -274,7 +287,11 @@
 
       const saveMyBetIds = (ids) => {
         const uniq = [...new Set(ids.map((x) => String(x)))];
-        localStorage.setItem(MY_BET_IDS_KEY, JSON.stringify(uniq));
+        try {
+          localStorage.setItem(MY_BET_IDS_KEY, JSON.stringify(uniq));
+        } catch {
+          /* noop */
+        }
       };
 
       const addMyBetId = (id) => {
@@ -309,6 +326,56 @@
       const oddsSlotB = $("#matchupOddsSlotB");
       const submitBtn = $("#matchupSubmit");
       const poolValueEl = $("#matchupPoolValue");
+      const cdDays = $("#matchupCdDays");
+      const cdHours = $("#matchupCdHours");
+      const cdMins = $("#matchupCdMins");
+      const cdSecs = $("#matchupCdSecs");
+      const cdLine = $("#matchupCountdownLine");
+      const cdExpired = $("#matchupCountdownExpired");
+
+      const isBettingClosed = () => Date.now() >= BET_DEADLINE_MS;
+
+      const applyBettingClosedState = () => {
+        const closed = isBettingClosed();
+        root.classList.toggle("matchup--closed", closed);
+        if (cdLine) cdLine.hidden = closed;
+        if (cdExpired) cdExpired.hidden = !closed;
+        if (submitBtn) {
+          submitBtn.disabled = closed || matchupSubmitBusy;
+          if (closed || matchupSubmitBusy) submitBtn.setAttribute("aria-disabled", "true");
+          else submitBtn.removeAttribute("aria-disabled");
+        }
+        form?.querySelectorAll("select, input, textarea").forEach((el) => {
+          if (!form.contains(el)) return;
+          el.disabled = closed;
+        });
+      };
+
+      const pad2 = (n) => String(Math.max(0, Math.floor(n))).padStart(2, "0");
+
+      const tickCountdown = () => {
+        const left = BET_DEADLINE_MS - Date.now();
+        if (left <= 0) {
+          if (cdDays) cdDays.textContent = "00";
+          if (cdHours) cdHours.textContent = "00";
+          if (cdMins) cdMins.textContent = "00";
+          if (cdSecs) cdSecs.textContent = "00";
+          applyBettingClosedState();
+          if (countdownTimer != null) {
+            clearInterval(countdownTimer);
+            countdownTimer = null;
+          }
+          return;
+        }
+        const d = Math.floor(left / 86400000);
+        const h = Math.floor((left % 86400000) / 3600000);
+        const m = Math.floor((left % 3600000) / 60000);
+        const s = Math.floor((left % 60000) / 1000);
+        if (cdDays) cdDays.textContent = d > 99 ? String(d) : pad2(d);
+        if (cdHours) cdHours.textContent = pad2(h);
+        if (cdMins) cdMins.textContent = pad2(m);
+        if (cdSecs) cdSecs.textContent = pad2(s);
+      };
 
       const elTotalA = $("#matchupTotalA");
       const elTotalB = $("#matchupTotalB");
@@ -386,6 +453,15 @@
         return { totalA, totalB, pool, oddsA, oddsB };
       };
 
+      const expectedPayoutForRow = (row, agg) => {
+        const amt = Number(row.amount);
+        const side = normalizeBetSide(row.bet_to);
+        if (!Number.isFinite(amt) || amt <= 0 || !side) return null;
+        const mult = side === "A" ? agg.oddsA : agg.oddsB;
+        if (mult == null || !Number.isFinite(mult) || mult <= 0) return null;
+        return amt * mult;
+      };
+
       const flashOddsIfChanged = (el, key, displayStr) => {
         if (!el) return;
         const keyStr = displayStr ?? "";
@@ -411,21 +487,23 @@
         oddsAnimateReady = true;
       };
 
-      const renderHistory = (rows) => {
+      const renderHistory = (rows, agg) => {
         if (!historyBody) return;
         const sorted = sortRowsNewestFirst(rows).slice(0, 5);
         historyBody.innerHTML = "";
         if (!sorted.length) {
+          prevRowSnapshot.clear();
           const tr = document.createElement("tr");
           tr.className = "matchupTable__emptyRow";
           const td = document.createElement("td");
-          td.colSpan = 5;
+          td.colSpan = 6;
           td.className = "matchupTable__empty muted";
           td.textContent = "아직 베팅 내역이 없습니다.";
           tr.appendChild(td);
           historyBody.appendChild(tr);
           return;
         }
+        const seenIds = new Set();
         sorted.forEach((row) => {
           const side = normalizeBetSide(row.bet_to);
           const tr = document.createElement("tr");
@@ -433,6 +511,12 @@
           const choice = side ? labelForSide(side) : String(row.bet_to ?? "—");
           const amt = Number(row.amount);
           const amtStr = Number.isFinite(amt) ? fmtKRW(amt) : "—";
+          const payVal = expectedPayoutForRow(row, agg);
+          const payStr = payVal != null && Number.isFinite(payVal) ? fmtKRW(payVal) : "—";
+
+          const idKey = row.id != null ? String(row.id) : "";
+          if (idKey) seenIds.add(idKey);
+          const prev = idKey ? prevRowSnapshot.get(idKey) : null;
 
           const tdTime = document.createElement("td");
           tdTime.textContent = fmtRowTime(row);
@@ -441,8 +525,20 @@
           const tdTarget = document.createElement("td");
           tdTarget.textContent = choice;
           const tdAmt = document.createElement("td");
-          tdAmt.className = "matchupTable__num";
+          tdAmt.className = "matchupTable__num matchupTable__numCell";
           tdAmt.textContent = amtStr;
+          if (prev && prev.amt !== amtStr) {
+            tdAmt.classList.add("matchupTable__cell--pulse");
+            setTimeout(() => tdAmt.classList.remove("matchupTable__cell--pulse"), 500);
+          }
+
+          const tdPay = document.createElement("td");
+          tdPay.className = "matchupTable__num matchupTable__payoutEst matchupTable__payCell";
+          tdPay.textContent = payStr;
+          if (prev && prev.pay !== payStr) {
+            tdPay.classList.add("matchupTable__cell--pulse");
+            setTimeout(() => tdPay.classList.remove("matchupTable__cell--pulse"), 500);
+          }
 
           const tdAct = document.createElement("td");
           tdAct.className = "matchupTable__act";
@@ -451,19 +547,28 @@
             btn.type = "button";
             btn.className = "matchupTable__del";
             btn.setAttribute("data-matchup-delete", String(row.id));
-            btn.setAttribute("aria-label", "내 베팅 삭제");
+            btn.setAttribute("aria-label", "이 베팅 삭제");
             btn.innerHTML =
-              '<svg class="matchupTable__delIcon" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>';
+              '<span class="matchupTable__delTxt">삭제</span><svg class="matchupTable__delIcon" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>';
             tdAct.appendChild(btn);
           }
 
-          tr.append(tdTime, tdName, tdTarget, tdAmt, tdAct);
+          tr.append(tdTime, tdName, tdTarget, tdAmt, tdPay, tdAct);
           historyBody.appendChild(tr);
+          if (idKey) prevRowSnapshot.set(idKey, { amt: amtStr, pay: payStr });
         });
+        for (const k of [...prevRowSnapshot.keys()]) {
+          if (!seenIds.has(k)) prevRowSnapshot.delete(k);
+        }
       };
 
       const updatePayoutPreview = (agg) => {
         if (!amountInput || !payoutValueEl) return;
+        if (isBettingClosed()) {
+          payoutWrapEl?.classList.remove("matchupForm__payoutWrap--live");
+          payoutValueEl.textContent = "—";
+          return;
+        }
         const raw = amountInput.value;
         const amount = raw === "" ? NaN : Number(raw);
         const checked = form?.querySelector('input[name="bet_to"]:checked');
@@ -496,7 +601,7 @@
         const agg = aggregate(rows);
         latestAgg = agg;
         renderTotals(agg);
-        renderHistory(rows);
+        renderHistory(rows, agg);
         updatePayoutPreview(agg);
       };
 
@@ -513,11 +618,15 @@
         statusEl.style.color = isError ? "rgba(255, 180, 160, .95)" : "";
       };
 
+      applyBettingClosedState();
+      tickCountdown();
+      countdownTimer = window.setInterval(tickCountdown, 1000);
+
       if (typeof createClient !== "function") {
         setStatus("Supabase 클라이언트를 불러오지 못했습니다. 네트워크를 확인해 주세요.", true);
         if (historyBody) {
           historyBody.innerHTML =
-            '<tr class="matchupTable__emptyRow"><td colspan="5" class="matchupTable__empty muted">초기화 실패</td></tr>';
+            '<tr class="matchupTable__emptyRow"><td colspan="6" class="matchupTable__empty muted">초기화 실패</td></tr>';
         }
       } else {
         client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -529,7 +638,7 @@
             setStatus(err?.message ? `불러오기 실패: ${err.message}` : "데이터를 불러오지 못했습니다.", true);
             if (historyBody) {
               historyBody.innerHTML =
-                '<tr class="matchupTable__emptyRow"><td colspan="5" class="matchupTable__empty muted">데이터를 불러올 수 없습니다.</td></tr>';
+                '<tr class="matchupTable__emptyRow"><td colspan="6" class="matchupTable__empty muted">데이터를 불러올 수 없습니다.</td></tr>';
             }
           });
 
@@ -553,6 +662,11 @@
           form.addEventListener("submit", async (e) => {
             e.preventDefault();
             if (!client) return;
+            if (isBettingClosed()) {
+              setStatus("베팅이 종료되었습니다.", true);
+              applyBettingClosedState();
+              return;
+            }
 
             const fd = new FormData(form);
             const player_name = String(fd.get("player_name") || "").trim();
@@ -572,7 +686,8 @@
               return;
             }
 
-            submitBtn && (submitBtn.disabled = true);
+            matchupSubmitBusy = true;
+            applyBettingClosedState();
             setStatus("베팅 저장 중…");
 
             const { data: insertedRows, error } = await client
@@ -587,7 +702,8 @@
             if (error) {
               console.error(error);
               setStatus(error.message ? `저장 실패: ${error.message}` : "저장에 실패했습니다.", true);
-              submitBtn && (submitBtn.disabled = false);
+              matchupSubmitBusy = false;
+              applyBettingClosedState();
               return;
             }
 
@@ -599,8 +715,10 @@
               await loadAll();
             } catch (err) {
               console.error(err);
+            } finally {
+              matchupSubmitBusy = false;
+              applyBettingClosedState();
             }
-            submitBtn && (submitBtn.disabled = false);
           });
         }
 
@@ -644,6 +762,11 @@
       }
 
       window.addEventListener("beforeunload", () => {
+        try {
+          if (countdownTimer != null) clearInterval(countdownTimer);
+        } catch {
+          /* noop */
+        }
         try {
           if (client && channel) client.removeChannel(channel);
         } catch {
