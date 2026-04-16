@@ -978,19 +978,32 @@
             <h2 class="matchupHeader__title">
               Event Match Up <span class="matchupHeader__emph">실시간 베팅!</span>
             </h2>
-            <p class="matchupHeader__sub">6월 26일 단발성 Event 입니다.</p>
+            <p class="matchupHeader__sub" id="matchupHeaderSub">5월 26일 오후 12시에 오픈됩니다!</p>
           </header>
 
           <div class="matchupCountdown" id="matchupCountdown" aria-live="polite">
-            <p class="matchupCountdown__line" id="matchupCountdownLine">
-              <span class="matchupCountdown__prefix">베팅 마감까지 남은 시간:</span>
-              <span class="matchupCountdown__clock" id="matchupCountdownClock">
-                <span class="matchupCountdown__unit"><span id="matchupCdDays">00</span>일</span>
-                <span class="matchupCountdown__unit"><span id="matchupCdHours">00</span>시간</span>
-                <span class="matchupCountdown__unit"><span id="matchupCdMins">00</span>분</span>
-                <span class="matchupCountdown__unit"><span id="matchupCdSecs">00</span>초</span>
-              </span>
-            </p>
+            <div class="matchupCountdown__phase" id="matchupCountdownOpen" hidden>
+              <p class="matchupCountdown__line">
+                <span class="matchupCountdown__prefix">오픈까지 남은 시간:</span>
+                <span class="matchupCountdown__clock" id="matchupOpenClock" aria-hidden="true">
+                  <span class="matchupCountdown__unit"><span id="matchupOpenCdDays">00</span>일</span>
+                  <span class="matchupCountdown__unit"><span id="matchupOpenCdHours">00</span>시간</span>
+                  <span class="matchupCountdown__unit"><span id="matchupOpenCdMins">00</span>분</span>
+                  <span class="matchupCountdown__unit"><span id="matchupOpenCdSecs">00</span>초</span>
+                </span>
+              </p>
+            </div>
+            <div class="matchupCountdown__phase" id="matchupCountdownDeadline">
+              <p class="matchupCountdown__line" id="matchupCountdownLine">
+                <span class="matchupCountdown__prefix">베팅 마감까지 남은 시간:</span>
+                <span class="matchupCountdown__clock" id="matchupCountdownClock" aria-hidden="true">
+                  <span class="matchupCountdown__unit"><span id="matchupCdDays">00</span>일</span>
+                  <span class="matchupCountdown__unit"><span id="matchupCdHours">00</span>시간</span>
+                  <span class="matchupCountdown__unit"><span id="matchupCdMins">00</span>분</span>
+                  <span class="matchupCountdown__unit"><span id="matchupCdSecs">00</span>초</span>
+                </span>
+              </p>
+            </div>
             <p class="matchupCountdown__expired" id="matchupCountdownExpired" hidden>베팅이 종료되었습니다</p>
           </div>
 
@@ -1152,7 +1165,7 @@
                       <th scope="col" class="matchupTable__thNum">금액</th>
                       <th scope="col" class="matchupTable__thNum matchupTable__thPayout">예상 환급금</th>
                       <th scope="col" class="matchupTable__thAct">
-                        <span class="sr-only">내 베팅 삭제</span>
+                        <span class="sr-only">내 베팅 수정·삭제</span>
                       </th>
                     </tr>
                   </thead>

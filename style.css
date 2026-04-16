@@ -1326,6 +1326,9 @@ tr.rank td:first-child{ white-space: nowrap; }
   line-height: 1.55;
   color: rgba(236, 244, 240, .66);
 }
+.matchup--preopen .matchupBoard{
+  opacity: .92;
+}
 .matchupCountdown{
   max-width: 920px;
   margin: -8px auto 20px;
@@ -1369,6 +1372,9 @@ tr.rank td:first-child{ white-space: nowrap; }
 }
 .matchupCountdown__unit span:first-child{
   min-width: 2ch;
+}
+.matchupCountdown__phase{
+  margin: 0;
 }
 .matchupCountdown__expired{
   margin: 0;
@@ -1842,18 +1848,59 @@ tr.rank td:first-child{ white-space: nowrap; }
   min-width: 7.5rem;
 }
 .matchupTable__thAct{
-  width: 4.5rem;
-  min-width: 4.5rem;
+  width: 6.75rem;
+  min-width: 6.75rem;
   padding-left: 4px !important;
   padding-right: 8px !important;
-  text-align: center;
+  text-align: right;
 }
 .matchupTable__act{
-  width: 4.5rem;
-  min-width: 4.5rem;
+  width: 6.75rem;
+  min-width: 6.75rem;
   padding: 8px 6px !important;
-  text-align: center;
+  text-align: right;
   vertical-align: middle;
+}
+.matchupTable__actions{
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  flex-wrap: nowrap;
+}
+.matchupTable__edit{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 30px;
+  padding: 5px 7px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: #7dd3fc;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  transition: color .15s ease, background .15s ease, transform .15s ease;
+}
+.matchupTable__editTxt{
+  line-height: 1;
+}
+.matchupTable__edit:hover{
+  color: #bae6fd;
+  background: rgba(56, 189, 248, .12);
+}
+.matchupTable__edit:active{
+  transform: scale(.97);
+}
+.matchupTable__editIcon{
+  display: block;
+  flex-shrink: 0;
+  opacity: .95;
+}
+@media (prefers-reduced-motion: reduce){
+  .matchupTable__edit:active{ transform: none; }
 }
 .matchupTable__del{
   display: inline-flex;

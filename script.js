@@ -269,9 +269,11 @@
         /* noop */
       }
 
+      const OPEN_MS = new Date(2026, 4, 26, 12, 0, 0).getTime();
       const BET_DEADLINE_MS = new Date(2026, 5, 25, 12, 0, 0).getTime();
       let countdownTimer = null;
       let matchupSubmitBusy = false;
+      let editingBetId = null;
       const prevRowSnapshot = new Map();
 
       const loadMyBetIds = () => {
@@ -330,51 +332,96 @@
       const cdHours = $("#matchupCdHours");
       const cdMins = $("#matchupCdMins");
       const cdSecs = $("#matchupCdSecs");
-      const cdLine = $("#matchupCountdownLine");
       const cdExpired = $("#matchupCountdownExpired");
+      const cdOpenPhase = $("#matchupCountdownOpen");
+      const cdDeadlinePhase = $("#matchupCountdownDeadline");
+      const oDays = $("#matchupOpenCdDays");
+      const oHours = $("#matchupOpenCdHours");
+      const oMins = $("#matchupOpenCdMins");
+      const oSecs = $("#matchupOpenCdSecs");
+      const headerSub = $("#matchupHeaderSub");
 
+      const isOpen = () => Date.now() >= OPEN_MS;
       const isBettingClosed = () => Date.now() >= BET_DEADLINE_MS;
-
-      const applyBettingClosedState = () => {
-        const closed = isBettingClosed();
-        root.classList.toggle("matchup--closed", closed);
-        if (cdLine) cdLine.hidden = closed;
-        if (cdExpired) cdExpired.hidden = !closed;
-        if (submitBtn) {
-          submitBtn.disabled = closed || matchupSubmitBusy;
-          if (closed || matchupSubmitBusy) submitBtn.setAttribute("aria-disabled", "true");
-          else submitBtn.removeAttribute("aria-disabled");
-        }
-        form?.querySelectorAll("select, input, textarea").forEach((el) => {
-          if (!form.contains(el)) return;
-          el.disabled = closed;
-        });
-      };
+      const canBet = () => isOpen() && !isBettingClosed();
 
       const pad2 = (n) => String(Math.max(0, Math.floor(n))).padStart(2, "0");
 
+      const setDigitsFromMs = (ms, dayEl, hourEl, minEl, secEl) => {
+        const left = Math.max(0, ms);
+        const d = Math.floor(left / 86400000);
+        const h = Math.floor((left % 86400000) / 3600000);
+        const m = Math.floor((left % 3600000) / 60000);
+        const s = Math.floor((left % 60000) / 1000);
+        if (dayEl) dayEl.textContent = d > 99 ? String(d) : pad2(d);
+        if (hourEl) hourEl.textContent = pad2(h);
+        if (minEl) minEl.textContent = pad2(m);
+        if (secEl) secEl.textContent = pad2(s);
+      };
+
+      const resetEditMode = () => {
+        editingBetId = null;
+        if (submitBtn) submitBtn.textContent = "베팅하기";
+      };
+
+      const applyBettingPhaseState = () => {
+        const open = isOpen();
+        const closed = isBettingClosed();
+        const allow = canBet();
+
+        if (headerSub) {
+          headerSub.textContent = open
+            ? "6월 26일 단발성 Event 입니다."
+            : "5월 26일 오후 12시에 오픈됩니다!";
+        }
+
+        if (!allow && editingBetId) resetEditMode();
+
+        root.classList.toggle("matchup--preopen", !open && !closed);
+        root.classList.toggle("matchup--closed", closed);
+
+        if (submitBtn) {
+          submitBtn.disabled = !allow || matchupSubmitBusy;
+          submitBtn.textContent = editingBetId ? "수정완료" : "베팅하기";
+          if (!allow || matchupSubmitBusy) submitBtn.setAttribute("aria-disabled", "true");
+          else submitBtn.removeAttribute("aria-disabled");
+        }
+
+        form?.querySelectorAll("select, input, textarea").forEach((el) => {
+          if (!form.contains(el)) return;
+          el.disabled = !allow;
+        });
+      };
+
       const tickCountdown = () => {
-        const left = BET_DEADLINE_MS - Date.now();
-        if (left <= 0) {
-          if (cdDays) cdDays.textContent = "00";
-          if (cdHours) cdHours.textContent = "00";
-          if (cdMins) cdMins.textContent = "00";
-          if (cdSecs) cdSecs.textContent = "00";
-          applyBettingClosedState();
+        const now = Date.now();
+        if (now >= BET_DEADLINE_MS) {
+          setDigitsFromMs(0, cdDays, cdHours, cdMins, cdSecs);
+          setDigitsFromMs(0, oDays, oHours, oMins, oSecs);
+          if (cdOpenPhase) cdOpenPhase.hidden = true;
+          if (cdDeadlinePhase) cdDeadlinePhase.hidden = true;
+          if (cdExpired) cdExpired.hidden = false;
+          applyBettingPhaseState();
           if (countdownTimer != null) {
             clearInterval(countdownTimer);
             countdownTimer = null;
           }
           return;
         }
-        const d = Math.floor(left / 86400000);
-        const h = Math.floor((left % 86400000) / 3600000);
-        const m = Math.floor((left % 3600000) / 60000);
-        const s = Math.floor((left % 60000) / 1000);
-        if (cdDays) cdDays.textContent = d > 99 ? String(d) : pad2(d);
-        if (cdHours) cdHours.textContent = pad2(h);
-        if (cdMins) cdMins.textContent = pad2(m);
-        if (cdSecs) cdSecs.textContent = pad2(s);
+
+        if (cdExpired) cdExpired.hidden = true;
+
+        if (now < OPEN_MS) {
+          if (cdOpenPhase) cdOpenPhase.hidden = false;
+          if (cdDeadlinePhase) cdDeadlinePhase.hidden = true;
+          setDigitsFromMs(OPEN_MS - now, oDays, oHours, oMins, oSecs);
+        } else {
+          if (cdOpenPhase) cdOpenPhase.hidden = true;
+          if (cdDeadlinePhase) cdDeadlinePhase.hidden = false;
+          setDigitsFromMs(BET_DEADLINE_MS - now, cdDays, cdHours, cdMins, cdSecs);
+        }
+
+        applyBettingPhaseState();
       };
 
       const elTotalA = $("#matchupTotalA");
@@ -543,14 +590,33 @@
           const tdAct = document.createElement("td");
           tdAct.className = "matchupTable__act";
           if (isMyBetRow(row.id)) {
-            const btn = document.createElement("button");
-            btn.type = "button";
-            btn.className = "matchupTable__del";
-            btn.setAttribute("data-matchup-delete", String(row.id));
-            btn.setAttribute("aria-label", "이 베팅 삭제");
-            btn.innerHTML =
+            const wrap = document.createElement("div");
+            wrap.className = "matchupTable__actions";
+
+            const sideRaw = normalizeBetSide(row.bet_to);
+            if (sideRaw) {
+              const editBtn = document.createElement("button");
+              editBtn.type = "button";
+              editBtn.className = "matchupTable__edit";
+              editBtn.setAttribute("data-matchup-edit", String(row.id));
+              editBtn.setAttribute("data-matchup-edit-side", sideRaw);
+              editBtn.setAttribute("data-matchup-edit-name", name);
+              editBtn.setAttribute("data-matchup-edit-amount", Number.isFinite(amt) ? String(amt) : "");
+              editBtn.setAttribute("aria-label", "이 베팅 수정");
+              editBtn.innerHTML =
+                '<span class="matchupTable__editTxt">수정</span><svg class="matchupTable__editIcon" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>';
+              wrap.appendChild(editBtn);
+            }
+
+            const delBtn = document.createElement("button");
+            delBtn.type = "button";
+            delBtn.className = "matchupTable__del";
+            delBtn.setAttribute("data-matchup-delete", String(row.id));
+            delBtn.setAttribute("aria-label", "이 베팅 삭제");
+            delBtn.innerHTML =
               '<span class="matchupTable__delTxt">삭제</span><svg class="matchupTable__delIcon" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>';
-            tdAct.appendChild(btn);
+            wrap.appendChild(delBtn);
+            tdAct.appendChild(wrap);
           }
 
           tr.append(tdTime, tdName, tdTarget, tdAmt, tdPay, tdAct);
@@ -564,7 +630,7 @@
 
       const updatePayoutPreview = (agg) => {
         if (!amountInput || !payoutValueEl) return;
-        if (isBettingClosed()) {
+        if (!isOpen() || isBettingClosed()) {
           payoutWrapEl?.classList.remove("matchupForm__payoutWrap--live");
           payoutValueEl.textContent = "—";
           return;
@@ -602,7 +668,9 @@
         latestAgg = agg;
         renderTotals(agg);
         renderHistory(rows, agg);
+        if (editingBetId && !rows.some((r) => String(r.id) === editingBetId)) resetEditMode();
         updatePayoutPreview(agg);
+        applyBettingPhaseState();
       };
 
       const loadAll = async () => {
@@ -618,7 +686,7 @@
         statusEl.style.color = isError ? "rgba(255, 180, 160, .95)" : "";
       };
 
-      applyBettingClosedState();
+      applyBettingPhaseState();
       tickCountdown();
       countdownTimer = window.setInterval(tickCountdown, 1000);
 
@@ -662,9 +730,14 @@
           form.addEventListener("submit", async (e) => {
             e.preventDefault();
             if (!client) return;
+            if (!isOpen()) {
+              setStatus("아직 오픈 전입니다.", true);
+              applyBettingPhaseState();
+              return;
+            }
             if (isBettingClosed()) {
               setStatus("베팅이 종료되었습니다.", true);
-              applyBettingClosedState();
+              applyBettingPhaseState();
               return;
             }
 
@@ -687,7 +760,51 @@
             }
 
             matchupSubmitBusy = true;
-            applyBettingClosedState();
+            applyBettingPhaseState();
+
+            const idForQuery = (raw) => {
+              const str = String(raw);
+              return /^\d+$/.test(str) && Number(str) <= Number.MAX_SAFE_INTEGER ? Number(str) : raw;
+            };
+
+            if (editingBetId) {
+              if (!isMyBetRow(editingBetId)) {
+                resetEditMode();
+                matchupSubmitBusy = false;
+                applyBettingPhaseState();
+                return;
+              }
+              setStatus("수정 반영 중…");
+              const { error: upErr } = await client
+                .from("match_bets")
+                .update({
+                  player_name,
+                  bet_to,
+                  amount: Math.round(amount),
+                })
+                .eq("id", idForQuery(editingBetId));
+
+              if (upErr) {
+                console.error(upErr);
+                setStatus(upErr.message ? `수정 실패: ${upErr.message}` : "수정에 실패했습니다.", true);
+                matchupSubmitBusy = false;
+                applyBettingPhaseState();
+                return;
+              }
+
+              resetEditMode();
+              setStatus("수정되었습니다.");
+              try {
+                await loadAll();
+              } catch (err) {
+                console.error(err);
+              } finally {
+                matchupSubmitBusy = false;
+                applyBettingPhaseState();
+              }
+              return;
+            }
+
             setStatus("베팅 저장 중…");
 
             const { data: insertedRows, error } = await client
@@ -703,7 +820,7 @@
               console.error(error);
               setStatus(error.message ? `저장 실패: ${error.message}` : "저장에 실패했습니다.", true);
               matchupSubmitBusy = false;
-              applyBettingClosedState();
+              applyBettingPhaseState();
               return;
             }
 
@@ -717,7 +834,7 @@
               console.error(err);
             } finally {
               matchupSubmitBusy = false;
-              applyBettingClosedState();
+              applyBettingPhaseState();
             }
           });
         }
@@ -730,6 +847,43 @@
         });
 
         historyBody?.addEventListener("click", async (e) => {
+          const editBtn = e.target.closest(".matchupTable__edit");
+          if (editBtn && historyBody.contains(editBtn)) {
+            const rawId = editBtn.getAttribute("data-matchup-edit");
+            if (rawId == null || !isMyBetRow(rawId)) return;
+            if (!canBet()) {
+              setStatus("베팅 수정은 오픈 후 마감 전에만 가능합니다.", true);
+              return;
+            }
+            const name = String(editBtn.getAttribute("data-matchup-edit-name") || "").trim();
+            const side = normalizeBetSide(editBtn.getAttribute("data-matchup-edit-side"));
+            const amtRaw = editBtn.getAttribute("data-matchup-edit-amount");
+            const amt = amtRaw === "" || amtRaw == null ? NaN : Number(amtRaw);
+
+            const sel = $("#matchupMember");
+            if (sel) {
+              sel.value = name;
+              if (!name || !Array.from(sel.options).some((o) => o.value === name)) {
+                setStatus("목록에 없는 이름입니다. 회원 목록을 확인해 주세요.", true);
+                return;
+              }
+            }
+            const rA = form?.querySelector('input[name="bet_to"][value="A"]');
+            const rB = form?.querySelector('input[name="bet_to"][value="B"]');
+            if (side === "A" && rA) {
+              rA.checked = true;
+            } else if (side === "B" && rB) {
+              rB.checked = true;
+            }
+            if (amountInput && Number.isFinite(amt)) amountInput.value = String(amt);
+            editingBetId = String(rawId);
+            if (submitBtn) submitBtn.textContent = "수정완료";
+            applyBettingPhaseState();
+            updatePayoutPreview(latestAgg);
+            setStatus("수정할 내용을 확인한 뒤 [수정완료]를 눌러 주세요.");
+            return;
+          }
+
           const btn = e.target.closest(".matchupTable__del");
           if (!btn || !historyBody.contains(btn)) return;
           const rawId = btn.getAttribute("data-matchup-delete");
@@ -751,6 +905,7 @@
             return;
           }
 
+          if (editingBetId === String(rawId)) resetEditMode();
           removeMyBetId(rawId);
           setStatus("삭제되었습니다.");
           try {
@@ -758,6 +913,7 @@
           } catch (err) {
             console.error(err);
           }
+          applyBettingPhaseState();
         });
       }
 
