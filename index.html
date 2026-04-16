@@ -979,39 +979,81 @@
             <p class="section__subtitle">최지훈 vs 박민웅 — 풀 기준 배당이 실시간으로 반영됩니다.</p>
           </header>
 
-          <div class="matchupCard" data-matchup-root>
-            <div class="matchupCard__vs" aria-hidden="true">
-              <div class="matchupCard__player matchupCard__player--a">
-                <span class="matchupCard__label">PLAYER A</span>
-                <h3 class="matchupCard__name">최지훈</h3>
-                <div class="matchupCard__stat">
-                  <span class="matchupCard__statLabel">총 배팅 금액</span>
-                  <strong class="matchupCard__amount" id="matchupTotalA" data-matchup-amount-a>0원</strong>
+          <div class="matchupDash" data-matchup-root>
+            <div class="matchupBoard">
+              <div class="matchupBoard__grid">
+                <article class="matchupFace matchupFace--a">
+                  <header class="matchupFace__head">
+                    <span class="matchupFace__tag">PLAYER A</span>
+                    <h3 class="matchupFace__name">최지훈</h3>
+                  </header>
+                  <dl class="matchupFace__stats">
+                    <div class="matchupFace__row matchupFace__row--pool">
+                      <dt>총 금액</dt>
+                      <dd><span class="matchupFace__pool" id="matchupTotalA">0원</span></dd>
+                    </div>
+                    <div class="matchupFace__row matchupFace__row--odds">
+                      <dt>배당률</dt>
+                      <dd>
+                        <div class="matchupOddsSlot" id="matchupOddsSlotA" data-empty="true">
+                          <span class="matchupOddsSlot__value matchupCard__odds" id="matchupOddsA"></span>
+                          <span class="matchupOddsSlot__void" aria-hidden="true">
+                            <span></span><span></span><span></span>
+                          </span>
+                        </div>
+                      </dd>
+                    </div>
+                  </dl>
+                </article>
+
+                <div class="matchupBoard__vsCol" aria-hidden="true">
+                  <div class="matchupVsIcon" title="대결">
+                    <svg class="matchupVsIcon__svg" viewBox="0 0 64 64" width="48" height="48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <circle cx="32" cy="32" r="30" stroke="rgba(232,200,114,.35)" stroke-width="1.2" />
+                      <circle cx="32" cy="32" r="22" stroke="rgba(232,200,114,.2)" stroke-width="1" />
+                      <path d="M22 24 L42 40 M42 24 L22 40" stroke="url(#matchupVsGrad)" stroke-width="2.2" stroke-linecap="round" />
+                      <defs>
+                        <linearGradient id="matchupVsGrad" x1="22" y1="24" x2="42" y2="40" gradientUnits="userSpaceOnUse">
+                          <stop stop-color="#f0dfa0" />
+                          <stop offset="1" stop-color="#c9a227" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                    <span class="matchupVsIcon__label">VS</span>
+                  </div>
                 </div>
-                <div class="matchupCard__stat matchupCard__stat--odds">
-                  <span class="matchupCard__statLabel">배당률</span>
-                  <strong class="matchupCard__odds" id="matchupOddsA" data-matchup-odds-a>—</strong>
-                </div>
+
+                <article class="matchupFace matchupFace--b">
+                  <header class="matchupFace__head">
+                    <span class="matchupFace__tag">PLAYER B</span>
+                    <h3 class="matchupFace__name">박민웅</h3>
+                  </header>
+                  <dl class="matchupFace__stats">
+                    <div class="matchupFace__row matchupFace__row--pool">
+                      <dt>총 금액</dt>
+                      <dd><span class="matchupFace__pool" id="matchupTotalB">0원</span></dd>
+                    </div>
+                    <div class="matchupFace__row matchupFace__row--odds">
+                      <dt>배당률</dt>
+                      <dd>
+                        <div class="matchupOddsSlot" id="matchupOddsSlotB" data-empty="true">
+                          <span class="matchupOddsSlot__value matchupCard__odds" id="matchupOddsB"></span>
+                          <span class="matchupOddsSlot__void" aria-hidden="true">
+                            <span></span><span></span><span></span>
+                          </span>
+                        </div>
+                      </dd>
+                    </div>
+                  </dl>
+                </article>
               </div>
-              <div class="matchupCard__divider">
-                <span class="matchupCard__vsText">VS</span>
-              </div>
-              <div class="matchupCard__player matchupCard__player--b">
-                <span class="matchupCard__label">PLAYER B</span>
-                <h3 class="matchupCard__name">박민웅</h3>
-                <div class="matchupCard__stat">
-                  <span class="matchupCard__statLabel">총 배팅 금액</span>
-                  <strong class="matchupCard__amount" id="matchupTotalB" data-matchup-amount-b>0원</strong>
-                </div>
-                <div class="matchupCard__stat matchupCard__stat--odds">
-                  <span class="matchupCard__statLabel">배당률</span>
-                  <strong class="matchupCard__odds" id="matchupOddsB" data-matchup-odds-b>—</strong>
-                </div>
-              </div>
+              <footer class="matchupBoard__footer">
+                <span class="matchupBoard__poolLabel">전체 풀</span>
+                <strong class="matchupBoard__poolVal" id="matchupPoolValue">0원</strong>
+              </footer>
             </div>
 
-            <p class="matchupCard__pool muted" id="matchupPoolTotal">전체 풀: <strong id="matchupPoolValue">0원</strong></p>
-            <p class="matchupCard__status muted" id="matchupStatus" role="status" aria-live="polite"></p>
+            <p class="matchupDash__status muted" id="matchupStatus" role="status" aria-live="polite"></p>
 
             <form class="matchupForm" id="matchupForm" novalidate>
               <div class="matchupForm__row">
@@ -1073,18 +1115,35 @@
                 </label>
               </div>
 
-              <p class="matchupForm__payout" id="matchupPayout" aria-live="polite">
-                예상 환급금: <strong id="matchupPayoutValue">—</strong>
-              </p>
+              <div class="matchupForm__payoutWrap" id="matchupPayout">
+                <span class="matchupForm__payoutLabel">예상 환급금</span>
+                <p class="matchupForm__payout" aria-live="polite">
+                  <strong class="matchupForm__payoutStrong" id="matchupPayoutValue">—</strong>
+                </p>
+              </div>
 
-              <button type="submit" class="matchupForm__submit btn" id="matchupSubmit">배팅하기</button>
+              <button type="submit" class="matchupForm__submit" id="matchupSubmit">배팅하기</button>
             </form>
 
             <div class="matchupHistory">
               <h4 class="matchupHistory__title">최근 배팅</h4>
-              <ul class="matchupHistory__list" id="matchupHistoryList">
-                <li class="matchupHistory__empty muted">불러오는 중…</li>
-              </ul>
+              <div class="matchupTableWrap">
+                <table class="matchupTable">
+                  <thead>
+                    <tr>
+                      <th scope="col">시간</th>
+                      <th scope="col">이름</th>
+                      <th scope="col">대상</th>
+                      <th scope="col" class="matchupTable__thNum">금액</th>
+                    </tr>
+                  </thead>
+                  <tbody id="matchupHistoryBody">
+                    <tr class="matchupTable__placeholder">
+                      <td colspan="4">불러오는 중…</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
