@@ -259,6 +259,45 @@
 
     const root = $("#matchup");
     if (root) {
+      const MY_BET_IDS_KEY = "golife_matchup_my_bet_ids";
+
+      const loadMyBetIds = () => {
+        try {
+          const raw = localStorage.getItem(MY_BET_IDS_KEY);
+          if (!raw) return [];
+          const parsed = JSON.parse(raw);
+          return Array.isArray(parsed) ? parsed.map((x) => String(x)) : [];
+        } catch {
+          return [];
+        }
+      };
+
+      const saveMyBetIds = (ids) => {
+        const uniq = [...new Set(ids.map((x) => String(x)))];
+        localStorage.setItem(MY_BET_IDS_KEY, JSON.stringify(uniq));
+      };
+
+      const addMyBetId = (id) => {
+        if (id == null) return;
+        const s = String(id);
+        const cur = loadMyBetIds();
+        if (!cur.includes(s)) cur.push(s);
+        saveMyBetIds(cur);
+      };
+
+      const removeMyBetId = (id) => {
+        if (id == null) return;
+        const s = String(id);
+        saveMyBetIds(loadMyBetIds().filter((x) => x !== s));
+      };
+
+      const isMyBetRow = (id) => (id != null ? loadMyBetIds().includes(String(id)) : false);
+
+      const pruneMyBetIds = (serverRows) => {
+        const serverIds = new Set((serverRows || []).map((r) => String(r.id)));
+        saveMyBetIds(loadMyBetIds().filter((id) => serverIds.has(id)));
+      };
+
       const createClient = window.supabase?.createClient;
       const statusEl = $("#matchupStatus");
       const form = $("#matchupForm");
@@ -380,9 +419,9 @@
           const tr = document.createElement("tr");
           tr.className = "matchupTable__emptyRow";
           const td = document.createElement("td");
-          td.colSpan = 4;
+          td.colSpan = 5;
           td.className = "matchupTable__empty muted";
-          td.textContent = "아직 배팅 내역이 없습니다.";
+          td.textContent = "아직 베팅 내역이 없습니다.";
           tr.appendChild(td);
           historyBody.appendChild(tr);
           return;
@@ -405,7 +444,20 @@
           tdAmt.className = "matchupTable__num";
           tdAmt.textContent = amtStr;
 
-          tr.append(tdTime, tdName, tdTarget, tdAmt);
+          const tdAct = document.createElement("td");
+          tdAct.className = "matchupTable__act";
+          if (isMyBetRow(row.id)) {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "matchupTable__del";
+            btn.setAttribute("data-matchup-delete", String(row.id));
+            btn.setAttribute("aria-label", "내 베팅 삭제");
+            btn.innerHTML =
+              '<svg class="matchupTable__delIcon" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>';
+            tdAct.appendChild(btn);
+          }
+
+          tr.append(tdTime, tdName, tdTarget, tdAmt, tdAct);
           historyBody.appendChild(tr);
         });
       };
@@ -440,6 +492,7 @@
       let latestAgg = { totalA: 0, totalB: 0, pool: 0, oddsA: null, oddsB: null };
 
       const refreshFromRows = (rows) => {
+        pruneMyBetIds(rows);
         const agg = aggregate(rows);
         latestAgg = agg;
         renderTotals(agg);
@@ -464,7 +517,7 @@
         setStatus("Supabase 클라이언트를 불러오지 못했습니다. 네트워크를 확인해 주세요.", true);
         if (historyBody) {
           historyBody.innerHTML =
-            '<tr class="matchupTable__emptyRow"><td colspan="4" class="matchupTable__empty muted">초기화 실패</td></tr>';
+            '<tr class="matchupTable__emptyRow"><td colspan="5" class="matchupTable__empty muted">초기화 실패</td></tr>';
         }
       } else {
         client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -476,7 +529,7 @@
             setStatus(err?.message ? `불러오기 실패: ${err.message}` : "데이터를 불러오지 못했습니다.", true);
             if (historyBody) {
               historyBody.innerHTML =
-                '<tr class="matchupTable__emptyRow"><td colspan="4" class="matchupTable__empty muted">데이터를 불러올 수 없습니다.</td></tr>';
+                '<tr class="matchupTable__emptyRow"><td colspan="5" class="matchupTable__empty muted">데이터를 불러올 수 없습니다.</td></tr>';
             }
           });
 
@@ -520,13 +573,16 @@
             }
 
             submitBtn && (submitBtn.disabled = true);
-            setStatus("배팅 저장 중…");
+            setStatus("베팅 저장 중…");
 
-            const { error } = await client.from("match_bets").insert({
-              player_name,
-              bet_to,
-              amount: Math.round(amount),
-            });
+            const { data: insertedRows, error } = await client
+              .from("match_bets")
+              .insert({
+                player_name,
+                bet_to,
+                amount: Math.round(amount),
+              })
+              .select("id");
 
             if (error) {
               console.error(error);
@@ -535,7 +591,10 @@
               return;
             }
 
-            setStatus("배팅이 반영되었습니다.");
+            const newId = Array.isArray(insertedRows) && insertedRows[0] ? insertedRows[0].id : null;
+            if (newId != null) addMyBetId(newId);
+
+            setStatus("베팅이 반영되었습니다.");
             try {
               await loadAll();
             } catch (err) {
@@ -550,6 +609,37 @@
           form?.addEventListener(ev, (e) => {
             if (e.target?.matches?.('input[name="bet_to"]')) updatePayoutPreview(latestAgg);
           });
+        });
+
+        historyBody?.addEventListener("click", async (e) => {
+          const btn = e.target.closest(".matchupTable__del");
+          if (!btn || !historyBody.contains(btn)) return;
+          const rawId = btn.getAttribute("data-matchup-delete");
+          if (rawId == null || !client) return;
+          if (!isMyBetRow(rawId)) return;
+
+          const s = String(rawId);
+          const idForQuery =
+            /^\d+$/.test(s) && Number(s) <= Number.MAX_SAFE_INTEGER ? Number(s) : rawId;
+          btn.disabled = true;
+          setStatus("삭제 중…");
+
+          const { error: delErr } = await client.from("match_bets").delete().eq("id", idForQuery);
+
+          if (delErr) {
+            console.error(delErr);
+            setStatus(delErr.message ? `삭제 실패: ${delErr.message}` : "삭제에 실패했습니다.", true);
+            btn.disabled = false;
+            return;
+          }
+
+          removeMyBetId(rawId);
+          setStatus("삭제되었습니다.");
+          try {
+            await loadAll();
+          } catch (err) {
+            console.error(err);
+          }
         });
       }
 

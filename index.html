@@ -972,11 +972,13 @@
       </section>
 
       <!-- MATCHUP: 실시간 배당 시뮬레이터 -->
-      <section class="section section--alt matchup" id="matchup" aria-label="실시간 매치업 배당 시뮬레이터">
+      <section class="section section--alt matchup" id="matchup" aria-label="Event Match Up 실시간 베팅">
         <div class="container">
-          <header class="section__header">
-            <h2 class="section__title">실시간 매치업 배당</h2>
-            <p class="section__subtitle">최지훈 vs 박민웅 — 풀 기준 배당이 실시간으로 반영됩니다.</p>
+          <header class="section__header matchupHeader">
+            <h2 class="matchupHeader__title">
+              Event Match Up <span class="matchupHeader__emph">실시간 베팅!</span>
+            </h2>
+            <p class="matchupHeader__sub">6월 26일 단발성 Event 입니다.</p>
           </header>
 
           <div class="matchupDash" data-matchup-root>
@@ -1122,7 +1124,7 @@
                 </p>
               </div>
 
-              <button type="submit" class="matchupForm__submit" id="matchupSubmit">배팅하기</button>
+              <button type="submit" class="matchupForm__submit" id="matchupSubmit">베팅하기</button>
             </form>
 
             <div class="matchupHistory">
@@ -1135,11 +1137,14 @@
                       <th scope="col">이름</th>
                       <th scope="col">대상</th>
                       <th scope="col" class="matchupTable__thNum">금액</th>
+                      <th scope="col" class="matchupTable__thAct">
+                        <span class="sr-only">내 베팅 삭제</span>
+                      </th>
                     </tr>
                   </thead>
                   <tbody id="matchupHistoryBody">
                     <tr class="matchupTable__placeholder">
-                      <td colspan="4">불러오는 중…</td>
+                      <td colspan="5">불러오는 중…</td>
                     </tr>
                   </tbody>
                 </table>

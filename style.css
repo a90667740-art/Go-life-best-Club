@@ -1302,8 +1302,29 @@ tr.rank td:first-child{ white-space: nowrap; }
     linear-gradient(180deg, #030a08 0%, #050f0c 40%, #030a08 100%) !important;
   border-color: transparent !important;
 }
-.matchup .section__subtitle{
-  color: rgba(236, 244, 240, .68);
+.matchupHeader{
+  display: grid;
+  gap: 0;
+  margin-bottom: 26px;
+  text-align: center;
+}
+.matchupHeader__title{
+  margin: 0;
+  font-size: clamp(28px, 5.5vw, 44px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.18;
+  color: #fafdfb;
+}
+.matchupHeader__emph{
+  color: var(--matchup-gold);
+  font-weight: 800;
+}
+.matchupHeader__sub{
+  margin: 14px 0 0;
+  font-size: 16px;
+  line-height: 1.55;
+  color: rgba(236, 244, 240, .66);
 }
 .matchupDash{
   max-width: 920px;
@@ -1758,6 +1779,51 @@ tr.rank td:first-child{ white-space: nowrap; }
 }
 .matchupTable__thNum{
   text-align: right;
+}
+.matchupTable__thAct{
+  width: 44px;
+  padding-left: 4px !important;
+  padding-right: 8px !important;
+  text-align: center;
+}
+.matchupTable__act{
+  width: 44px;
+  padding: 8px 6px !important;
+  text-align: center;
+  vertical-align: middle;
+}
+.matchupTable__del{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(236, 244, 240, .38);
+  cursor: pointer;
+  transition: color .15s ease, background .15s ease, transform .15s ease;
+}
+.matchupTable__del:hover{
+  color: rgba(255, 180, 170, .95);
+  background: rgba(255, 80, 80, .1);
+}
+.matchupTable__del:active{
+  transform: scale(.94);
+}
+.matchupTable__del:disabled{
+  opacity: .35;
+  cursor: wait;
+  pointer-events: none;
+}
+.matchupTable__delIcon{
+  display: block;
+  flex-shrink: 0;
+}
+@media (prefers-reduced-motion: reduce){
+  .matchupTable__del:active{ transform: none; }
 }
 .matchupTable tbody td{
   padding: 12px 12px;
