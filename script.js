@@ -333,8 +333,10 @@
       const cdMins = $("#matchupCdMins");
       const cdSecs = $("#matchupCdSecs");
       const cdExpired = $("#matchupCountdownExpired");
-      const cdOpenPhase = $("#matchupCountdownOpen");
       const cdDeadlinePhase = $("#matchupCountdownDeadline");
+      const preopenGate = $("#matchupPreopenGate");
+      const liveDash = $("#matchupLiveDash");
+      const cdWrap = $("#matchupCountdown");
       const oDays = $("#matchupOpenCdDays");
       const oHours = $("#matchupOpenCdHours");
       const oMins = $("#matchupOpenCdMins");
@@ -393,35 +395,13 @@
         });
       };
 
-      const tickCountdown = () => {
-        const now = Date.now();
-        if (now >= BET_DEADLINE_MS) {
-          setDigitsFromMs(0, cdDays, cdHours, cdMins, cdSecs);
-          setDigitsFromMs(0, oDays, oHours, oMins, oSecs);
-          if (cdOpenPhase) cdOpenPhase.hidden = true;
-          if (cdDeadlinePhase) cdDeadlinePhase.hidden = true;
-          if (cdExpired) cdExpired.hidden = false;
-          applyBettingPhaseState();
-          if (countdownTimer != null) {
-            clearInterval(countdownTimer);
-            countdownTimer = null;
-          }
-          return;
-        }
-
-        if (cdExpired) cdExpired.hidden = true;
-
-        if (now < OPEN_MS) {
-          if (cdOpenPhase) cdOpenPhase.hidden = false;
-          if (cdDeadlinePhase) cdDeadlinePhase.hidden = true;
-          setDigitsFromMs(OPEN_MS - now, oDays, oHours, oMins, oSecs);
-        } else {
-          if (cdOpenPhase) cdOpenPhase.hidden = true;
-          if (cdDeadlinePhase) cdDeadlinePhase.hidden = false;
-          setDigitsFromMs(BET_DEADLINE_MS - now, cdDays, cdHours, cdMins, cdSecs);
-        }
-
-        applyBettingPhaseState();
+      const syncMatchupPanels = () => {
+        const open = isOpen();
+        const closed = isBettingClosed();
+        const preOnly = !open && !closed;
+        if (preopenGate) preopenGate.hidden = !preOnly;
+        if (liveDash) liveDash.hidden = preOnly;
+        if (cdWrap) cdWrap.hidden = preOnly;
       };
 
       const elTotalA = $("#matchupTotalA");
@@ -686,19 +666,11 @@
         statusEl.style.color = isError ? "rgba(255, 180, 160, .95)" : "";
       };
 
-      applyBettingPhaseState();
-      tickCountdown();
-      countdownTimer = window.setInterval(tickCountdown, 1000);
+      let matchupRealtimeStarted = false;
 
-      if (typeof createClient !== "function") {
-        setStatus("Supabase 클라이언트를 불러오지 못했습니다. 네트워크를 확인해 주세요.", true);
-        if (historyBody) {
-          historyBody.innerHTML =
-            '<tr class="matchupTable__emptyRow"><td colspan="6" class="matchupTable__empty muted">초기화 실패</td></tr>';
-        }
-      } else {
-        client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
+      const startMatchupRealtime = () => {
+        if (matchupRealtimeStarted || !client) return;
+        matchupRealtimeStarted = true;
         loadAll()
           .then(() => {})
           .catch((err) => {
@@ -725,6 +697,58 @@
               setStatus("실시간 구독에 문제가 있습니다. 새로고침 해 보세요.", true);
             }
           });
+      };
+
+      const tickCountdown = () => {
+        const now = Date.now();
+        if (now >= BET_DEADLINE_MS) {
+          setDigitsFromMs(0, cdDays, cdHours, cdMins, cdSecs);
+          setDigitsFromMs(0, oDays, oHours, oMins, oSecs);
+          if (cdDeadlinePhase) cdDeadlinePhase.hidden = true;
+          if (cdExpired) cdExpired.hidden = false;
+          syncMatchupPanels();
+          applyBettingPhaseState();
+          if (countdownTimer != null) {
+            clearInterval(countdownTimer);
+            countdownTimer = null;
+          }
+          return;
+        }
+
+        if (cdExpired) cdExpired.hidden = true;
+
+        if (now < OPEN_MS) {
+          if (cdDeadlinePhase) cdDeadlinePhase.hidden = true;
+          setDigitsFromMs(OPEN_MS - now, oDays, oHours, oMins, oSecs);
+        } else {
+          if (cdDeadlinePhase) cdDeadlinePhase.hidden = false;
+          setDigitsFromMs(BET_DEADLINE_MS - now, cdDays, cdHours, cdMins, cdSecs);
+        }
+
+        syncMatchupPanels();
+        applyBettingPhaseState();
+        if (!matchupRealtimeStarted && isOpen() && client) startMatchupRealtime();
+      };
+
+      applyBettingPhaseState();
+      tickCountdown();
+      countdownTimer = window.setInterval(tickCountdown, 1000);
+
+      if (typeof createClient !== "function") {
+        setStatus("Supabase 클라이언트를 불러오지 못했습니다. 네트워크를 확인해 주세요.", true);
+        if (historyBody) {
+          historyBody.innerHTML =
+            '<tr class="matchupTable__emptyRow"><td colspan="6" class="matchupTable__empty muted">초기화 실패</td></tr>';
+        }
+      } else {
+        client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        if (isOpen()) {
+          startMatchupRealtime();
+        } else if (historyBody) {
+          historyBody.innerHTML =
+            '<tr class="matchupTable__emptyRow"><td colspan="6" class="matchupTable__empty muted">베팅 오픈 후 내역이 표시됩니다.</td></tr>';
+        }
 
         if (form) {
           form.addEventListener("submit", async (e) => {

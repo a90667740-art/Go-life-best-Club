@@ -1326,6 +1326,97 @@ tr.rank td:first-child{ white-space: nowrap; }
   line-height: 1.55;
   color: rgba(236, 244, 240, .66);
 }
+.matchupPreopenGate{
+  position: relative;
+  max-width: 920px;
+  margin: 0 auto 28px;
+  padding: clamp(28px, 5vw, 44px) clamp(20px, 4vw, 36px);
+  border-radius: calc(var(--radius-lg) + 6px);
+  overflow: hidden;
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(232, 200, 114, .14), transparent 52%),
+    linear-gradient(165deg, #0c1613 0%, #060c0a 45%, #0a1210 100%);
+  border: 1px solid rgba(232, 200, 114, .22);
+  box-shadow:
+    0 28px 72px rgba(0, 0, 0, .55),
+    inset 0 1px 0 rgba(255, 255, 255, .05);
+}
+.matchupPreopenGate__inner{
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: 14px;
+}
+.matchupPreopenGate__glow{
+  position: absolute;
+  inset: -40% -20%;
+  background: radial-gradient(closest-side, rgba(232, 200, 114, .12), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+.matchupPreopenGate__logo{
+  width: clamp(72px, 14vw, 96px);
+  height: auto;
+  border-radius: 18px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, .45);
+  border: 1px solid rgba(255, 255, 255, .08);
+}
+.matchupPreopenGate__kicker{
+  margin: 4px 0 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(232, 200, 114, .55);
+}
+.matchupPreopenGate__heading{
+  margin: 0;
+  font-size: clamp(18px, 3.2vw, 24px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #f4faf7;
+}
+.matchupPreopenGate__timer{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(10px, 2.5vw, 18px);
+  margin-top: 8px;
+}
+.matchupPreopenGate__unit{
+  min-width: clamp(68px, 16vw, 92px);
+  padding: 14px 12px 12px;
+  border-radius: var(--radius-md);
+  background: rgba(0, 0, 0, .35);
+  border: 1px solid rgba(232, 200, 114, .2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .04);
+}
+.matchupPreopenGate__num{
+  display: block;
+  font-size: clamp(32px, 7vw, 52px);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  color: var(--matchup-gold);
+  text-shadow: 0 0 40px rgba(232, 200, 114, .25);
+}
+.matchupPreopenGate__lbl{
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  color: rgba(236, 244, 240, .55);
+}
+.matchupPreopenGate__hint{
+  margin: 10px 0 0;
+  font-size: 14px;
+  max-width: 36em;
+  line-height: 1.55;
+}
 .matchup--preopen .matchupBoard{
   opacity: .92;
 }

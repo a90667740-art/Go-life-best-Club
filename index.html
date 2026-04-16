@@ -981,18 +981,37 @@
             <p class="matchupHeader__sub" id="matchupHeaderSub">5월 26일 오후 12시에 오픈됩니다!</p>
           </header>
 
-          <div class="matchupCountdown" id="matchupCountdown" aria-live="polite">
-            <div class="matchupCountdown__phase" id="matchupCountdownOpen" hidden>
-              <p class="matchupCountdown__line">
-                <span class="matchupCountdown__prefix">오픈까지 남은 시간:</span>
-                <span class="matchupCountdown__clock" id="matchupOpenClock" aria-hidden="true">
-                  <span class="matchupCountdown__unit"><span id="matchupOpenCdDays">00</span>일</span>
-                  <span class="matchupCountdown__unit"><span id="matchupOpenCdHours">00</span>시간</span>
-                  <span class="matchupCountdown__unit"><span id="matchupOpenCdMins">00</span>분</span>
-                  <span class="matchupCountdown__unit"><span id="matchupOpenCdSecs">00</span>초</span>
-                </span>
-              </p>
+          <!-- 오픈 전 전용: 베팅 시스템은 숨김, 아래 게이트만 표시 -->
+          <div class="matchupPreopenGate" id="matchupPreopenGate" aria-live="polite">
+            <div class="matchupPreopenGate__inner">
+              <div class="matchupPreopenGate__glow" aria-hidden="true"></div>
+              <img class="matchupPreopenGate__logo" src="./images/logo.jpg" width="88" height="88" alt="고라베 Golf Club" />
+              <p class="matchupPreopenGate__kicker">Golifebest · Event Match Up</p>
+              <p class="matchupPreopenGate__heading">베팅 시작까지 남은 시간</p>
+              <div class="matchupPreopenGate__timer" id="matchupPreopenTimer">
+                <div class="matchupPreopenGate__unit">
+                  <span class="matchupPreopenGate__num" id="matchupOpenCdDays">00</span>
+                  <span class="matchupPreopenGate__lbl">일</span>
+                </div>
+                <div class="matchupPreopenGate__unit">
+                  <span class="matchupPreopenGate__num" id="matchupOpenCdHours">00</span>
+                  <span class="matchupPreopenGate__lbl">시간</span>
+                </div>
+                <div class="matchupPreopenGate__unit">
+                  <span class="matchupPreopenGate__num" id="matchupOpenCdMins">00</span>
+                  <span class="matchupPreopenGate__lbl">분</span>
+                </div>
+                <div class="matchupPreopenGate__unit">
+                  <span class="matchupPreopenGate__num" id="matchupOpenCdSecs">00</span>
+                  <span class="matchupPreopenGate__lbl">초</span>
+                </div>
+              </div>
+              <p class="matchupPreopenGate__hint muted">5월 26일 정오에 베팅이 시작됩니다.</p>
             </div>
+          </div>
+
+          <!-- 오픈 후 ~ 마감 전: 6/25 마감 카운트다운 (프리오픈 게이트와 동일 슬롯 역할) -->
+          <div class="matchupCountdown matchupCountdown--deadline" id="matchupCountdown" hidden>
             <div class="matchupCountdown__phase" id="matchupCountdownDeadline">
               <p class="matchupCountdown__line" id="matchupCountdownLine">
                 <span class="matchupCountdown__prefix">베팅 마감까지 남은 시간:</span>
@@ -1007,7 +1026,7 @@
             <p class="matchupCountdown__expired" id="matchupCountdownExpired" hidden>베팅이 종료되었습니다</p>
           </div>
 
-          <div class="matchupDash" data-matchup-root>
+          <div class="matchupDash" id="matchupLiveDash" data-matchup-root hidden>
             <div class="matchupBoard">
               <div class="matchupBoard__grid">
                 <article class="matchupFace matchupFace--a">
