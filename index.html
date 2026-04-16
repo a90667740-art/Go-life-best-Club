@@ -43,6 +43,7 @@
             <a class="nav__link" href="#scoreboard">스코어</a>
             <a class="nav__link" href="#members">회원</a>
             <a class="nav__link" href="#rsvp">RSVP</a>
+            <a class="nav__link" href="#matchup">매치업</a>
             <a class="nav__link" href="#gallery">사진첩</a>
           </div>
         </div>
@@ -970,6 +971,125 @@
         </div>
       </section>
 
+      <!-- MATCHUP: 실시간 배당 시뮬레이터 -->
+      <section class="section section--alt matchup" id="matchup" aria-label="실시간 매치업 배당 시뮬레이터">
+        <div class="container">
+          <header class="section__header">
+            <h2 class="section__title">실시간 매치업 배당</h2>
+            <p class="section__subtitle">최지훈 vs 박민웅 — 풀 기준 배당이 실시간으로 반영됩니다.</p>
+          </header>
+
+          <div class="matchupCard" data-matchup-root>
+            <div class="matchupCard__vs" aria-hidden="true">
+              <div class="matchupCard__player matchupCard__player--a">
+                <span class="matchupCard__label">PLAYER A</span>
+                <h3 class="matchupCard__name">최지훈</h3>
+                <div class="matchupCard__stat">
+                  <span class="matchupCard__statLabel">총 배팅 금액</span>
+                  <strong class="matchupCard__amount" id="matchupTotalA" data-matchup-amount-a>0원</strong>
+                </div>
+                <div class="matchupCard__stat matchupCard__stat--odds">
+                  <span class="matchupCard__statLabel">배당률</span>
+                  <strong class="matchupCard__odds" id="matchupOddsA" data-matchup-odds-a>—</strong>
+                </div>
+              </div>
+              <div class="matchupCard__divider">
+                <span class="matchupCard__vsText">VS</span>
+              </div>
+              <div class="matchupCard__player matchupCard__player--b">
+                <span class="matchupCard__label">PLAYER B</span>
+                <h3 class="matchupCard__name">박민웅</h3>
+                <div class="matchupCard__stat">
+                  <span class="matchupCard__statLabel">총 배팅 금액</span>
+                  <strong class="matchupCard__amount" id="matchupTotalB" data-matchup-amount-b>0원</strong>
+                </div>
+                <div class="matchupCard__stat matchupCard__stat--odds">
+                  <span class="matchupCard__statLabel">배당률</span>
+                  <strong class="matchupCard__odds" id="matchupOddsB" data-matchup-odds-b>—</strong>
+                </div>
+              </div>
+            </div>
+
+            <p class="matchupCard__pool muted" id="matchupPoolTotal">전체 풀: <strong id="matchupPoolValue">0원</strong></p>
+            <p class="matchupCard__status muted" id="matchupStatus" role="status" aria-live="polite"></p>
+
+            <form class="matchupForm" id="matchupForm" novalidate>
+              <div class="matchupForm__row">
+                <label class="matchupForm__field">
+                  <span class="matchupForm__label">참여자</span>
+                  <select class="matchupForm__select" id="matchupMember" name="player_name" required>
+                    <option value="" disabled selected>회원 선택</option>
+                    <option value="김회용">김회용</option>
+                    <option value="전지오">전지오</option>
+                    <option value="주경필">주경필</option>
+                    <option value="양서훈">양서훈</option>
+                    <option value="김온">김온</option>
+                    <option value="문유석">문유석</option>
+                    <option value="김영두">김영두</option>
+                    <option value="최지훈">최지훈</option>
+                    <option value="김린">김린</option>
+                    <option value="이용">이용</option>
+                    <option value="김지진">김지진</option>
+                    <option value="박민웅">박민웅</option>
+                    <option value="계승범">계승범</option>
+                    <option value="홍원욱">홍원욱</option>
+                    <option value="허성훈">허성훈</option>
+                    <option value="김선후">김선후</option>
+                    <option value="김준환">김준환</option>
+                    <option value="오수창">오수창</option>
+                  </select>
+                </label>
+              </div>
+
+              <fieldset class="matchupForm__fieldset">
+                <legend class="matchupForm__legend">베팅 대상</legend>
+                <div class="matchupForm__toggle" role="radiogroup" aria-label="베팅 대상 선택">
+                  <label class="matchupForm__toggleBtn">
+                    <input type="radio" name="bet_to" value="A" checked />
+                    <span>최지훈 (A)</span>
+                  </label>
+                  <label class="matchupForm__toggleBtn">
+                    <input type="radio" name="bet_to" value="B" />
+                    <span>박민웅 (B)</span>
+                  </label>
+                </div>
+              </fieldset>
+
+              <div class="matchupForm__row">
+                <label class="matchupForm__field">
+                  <span class="matchupForm__label">금액 (10,000 ~ 100,000원)</span>
+                  <input
+                    class="matchupForm__input"
+                    type="number"
+                    id="matchupAmount"
+                    name="amount"
+                    min="10000"
+                    max="100000"
+                    step="1000"
+                    placeholder="10000"
+                    inputmode="numeric"
+                    required
+                  />
+                </label>
+              </div>
+
+              <p class="matchupForm__payout" id="matchupPayout" aria-live="polite">
+                예상 환급금: <strong id="matchupPayoutValue">—</strong>
+              </p>
+
+              <button type="submit" class="matchupForm__submit btn" id="matchupSubmit">배팅하기</button>
+            </form>
+
+            <div class="matchupHistory">
+              <h4 class="matchupHistory__title">최근 배팅</h4>
+              <ul class="matchupHistory__list" id="matchupHistoryList">
+                <li class="matchupHistory__empty muted">불러오는 중…</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- GALLERY -->
       <section class="section" id="gallery" aria-label="사진첩">
         <div class="container">
@@ -1067,6 +1187,7 @@
       </footer>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
     <script src="./script.js" defer></script>
   </body>
 </html>

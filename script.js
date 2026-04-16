@@ -251,5 +251,284 @@
       });
     }
   }
+
+  // Supabase: 실시간 매치업 배당 시뮬레이터
+  {
+    const SUPABASE_URL = "https://mfjhfoofnapqeblfsgmd.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_LiZGA1wRbaraQyLb9GFpRg_u9nzg6gh";
+
+    const root = $("#matchup");
+    if (root) {
+      const createClient = window.supabase?.createClient;
+      const statusEl = $("#matchupStatus");
+      const form = $("#matchupForm");
+      const amountInput = $("#matchupAmount");
+      const payoutValueEl = $("#matchupPayoutValue");
+      const historyList = $("#matchupHistoryList");
+      const submitBtn = $("#matchupSubmit");
+      const poolValueEl = $("#matchupPoolValue");
+
+      const elTotalA = $("#matchupTotalA");
+      const elTotalB = $("#matchupTotalB");
+      const elOddsA = $("#matchupOddsA");
+      const elOddsB = $("#matchupOddsB");
+
+      let client = null;
+      let channel = null;
+      let lastOddsStr = { A: "", B: "" };
+      let oddsAnimateReady = false;
+
+      const fmtKRW = (n) =>
+        `${Math.round(n).toLocaleString("ko-KR", { maximumFractionDigits: 0 })}원`;
+
+      const fmtOdds = (pool, side) => {
+        if (!Number.isFinite(pool) || pool <= 0 || !Number.isFinite(side) || side <= 0) return "—";
+        const x = pool / side;
+        if (!Number.isFinite(x) || x <= 0) return "—";
+        return `×${x.toFixed(2)}`;
+      };
+
+      const normalizeBetSide = (v) => {
+        const s = String(v ?? "").trim();
+        if (s === "A" || s === "a" || s === "최지훈") return "A";
+        if (s === "B" || s === "b" || s === "박민웅") return "B";
+        return null;
+      };
+
+      const labelForSide = (side) => (side === "A" ? "최지훈" : "박민웅");
+
+      const sortRowsNewestFirst = (rows) =>
+        [...rows].sort((a, b) => {
+          const ta = a.created_at ? new Date(a.created_at).getTime() : NaN;
+          const tb = b.created_at ? new Date(b.created_at).getTime() : NaN;
+          if (Number.isFinite(tb) || Number.isFinite(ta)) {
+            if (tb !== ta) return (Number.isFinite(tb) ? tb : 0) - (Number.isFinite(ta) ? ta : 0);
+          }
+          const ida = a.id != null ? Number(a.id) : 0;
+          const idb = b.id != null ? Number(b.id) : 0;
+          return idb - ida;
+        });
+
+      const aggregate = (rows) => {
+        let totalA = 0;
+        let totalB = 0;
+        for (const row of rows) {
+          const amt = Number(row.amount);
+          if (!Number.isFinite(amt) || amt <= 0) continue;
+          const side = normalizeBetSide(row.bet_to);
+          if (side === "A") totalA += amt;
+          else if (side === "B") totalB += amt;
+        }
+        const pool = totalA + totalB;
+        const oddsA = pool > 0 && totalA > 0 ? pool / totalA : null;
+        const oddsB = pool > 0 && totalB > 0 ? pool / totalB : null;
+        return { totalA, totalB, pool, oddsA, oddsB };
+      };
+
+      const flashOddsIfChanged = (el, key, displayStr) => {
+        if (!el) return;
+        if (lastOddsStr[key] === displayStr) return;
+        lastOddsStr[key] = displayStr;
+        if (!oddsAnimateReady) return;
+        el.classList.remove("is-tick");
+        void el.offsetWidth;
+        el.classList.add("is-tick");
+      };
+
+      const renderTotals = (agg) => {
+        if (elTotalA) elTotalA.textContent = fmtKRW(agg.totalA);
+        if (elTotalB) elTotalB.textContent = fmtKRW(agg.totalB);
+        if (poolValueEl) poolValueEl.textContent = fmtKRW(agg.pool);
+
+        const strA = fmtOdds(agg.pool, agg.totalA);
+        const strB = fmtOdds(agg.pool, agg.totalB);
+        if (elOddsA) {
+          elOddsA.textContent = strA;
+          flashOddsIfChanged(elOddsA, "A", strA);
+        }
+        if (elOddsB) {
+          elOddsB.textContent = strB;
+          flashOddsIfChanged(elOddsB, "B", strB);
+        }
+        oddsAnimateReady = true;
+      };
+
+      const renderHistory = (rows) => {
+        if (!historyList) return;
+        const sorted = sortRowsNewestFirst(rows).slice(0, 5);
+        historyList.innerHTML = "";
+        if (!sorted.length) {
+          const li = document.createElement("li");
+          li.className = "matchupHistory__empty muted";
+          li.textContent = "아직 배팅 내역이 없습니다.";
+          historyList.appendChild(li);
+          return;
+        }
+        sorted.forEach((row) => {
+          const side = normalizeBetSide(row.bet_to);
+          const li = document.createElement("li");
+          li.className = "matchupHistory__item";
+          const name = String(row.player_name ?? "").trim() || "—";
+          const choice = side ? labelForSide(side) : String(row.bet_to ?? "—");
+          const amt = Number(row.amount);
+          const amtStr = Number.isFinite(amt) ? fmtKRW(amt) : "—";
+          const spName = document.createElement("span");
+          spName.className = "matchupHistory__name";
+          spName.textContent = name;
+          const spMeta = document.createElement("span");
+          spMeta.className = "matchupHistory__meta";
+          spMeta.textContent = choice;
+          const spAmt = document.createElement("span");
+          spAmt.className = "matchupHistory__amount";
+          spAmt.textContent = amtStr;
+          li.append(spName, spMeta, spAmt);
+          historyList.appendChild(li);
+        });
+      };
+
+      const updatePayoutPreview = (agg) => {
+        if (!amountInput || !payoutValueEl) return;
+        const raw = amountInput.value;
+        const amount = raw === "" ? NaN : Number(raw);
+        const checked = form?.querySelector('input[name="bet_to"]:checked');
+        const side = checked ? normalizeBetSide(checked.value) : null;
+
+        if (!Number.isFinite(amount) || amount < 10000 || amount > 100000 || !side) {
+          payoutValueEl.textContent = "—";
+          return;
+        }
+        const sideTotal = side === "A" ? agg.totalA : agg.totalB;
+        if (!Number.isFinite(agg.pool) || agg.pool <= 0 || !Number.isFinite(sideTotal) || sideTotal <= 0) {
+          payoutValueEl.textContent = "—";
+          return;
+        }
+        const odds = agg.pool / sideTotal;
+        const payout = amount * odds;
+        payoutValueEl.textContent = fmtKRW(payout);
+      };
+
+      let latestAgg = { totalA: 0, totalB: 0, pool: 0, oddsA: null, oddsB: null };
+
+      const refreshFromRows = (rows) => {
+        const agg = aggregate(rows);
+        latestAgg = agg;
+        renderTotals(agg);
+        renderHistory(rows);
+        updatePayoutPreview(agg);
+      };
+
+      const loadAll = async () => {
+        if (!client) return;
+        const { data, error } = await client.from("match_bets").select("*");
+        if (error) throw error;
+        refreshFromRows(Array.isArray(data) ? data : []);
+      };
+
+      const setStatus = (msg, isError = false) => {
+        if (!statusEl) return;
+        statusEl.textContent = msg || "";
+        statusEl.style.color = isError ? "rgba(255, 180, 160, .95)" : "";
+      };
+
+      if (typeof createClient !== "function") {
+        setStatus("Supabase 클라이언트를 불러오지 못했습니다. 네트워크를 확인해 주세요.", true);
+        if (historyList) {
+          historyList.innerHTML = `<li class="matchupHistory__empty muted">초기화 실패</li>`;
+        }
+      } else {
+        client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        loadAll()
+          .then(() => setStatus("실시간 연결 중…"))
+          .catch((err) => {
+            console.error(err);
+            setStatus(err?.message ? `불러오기 실패: ${err.message}` : "데이터를 불러오지 못했습니다.", true);
+            if (historyList) {
+              historyList.innerHTML = `<li class="matchupHistory__empty muted">데이터를 불러올 수 없습니다.</li>`;
+            }
+          });
+
+        channel = client
+          .channel("match_bets_realtime")
+          .on(
+            "postgres_changes",
+            { event: "*", schema: "public", table: "match_bets" },
+            () => {
+              loadAll().catch((err) => console.error(err));
+            }
+          )
+          .subscribe((status) => {
+            if (status === "SUBSCRIBED") setStatus("");
+            if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+              setStatus("실시간 구독에 문제가 있습니다. 새로고침 해 보세요.", true);
+            }
+          });
+
+        if (form) {
+          form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            if (!client) return;
+
+            const fd = new FormData(form);
+            const player_name = String(fd.get("player_name") || "").trim();
+            const bet_to = normalizeBetSide(fd.get("bet_to"));
+            const amount = Number(fd.get("amount"));
+
+            if (!player_name) {
+              setStatus("참여자(회원)를 선택해 주세요.", true);
+              return;
+            }
+            if (!bet_to) {
+              setStatus("베팅 대상을 선택해 주세요.", true);
+              return;
+            }
+            if (!Number.isFinite(amount) || amount < 10000 || amount > 100000) {
+              setStatus("금액은 10,000원 ~ 100,000원 사이로 입력해 주세요.", true);
+              return;
+            }
+
+            submitBtn && (submitBtn.disabled = true);
+            setStatus("배팅 저장 중…");
+
+            const { error } = await client.from("match_bets").insert({
+              player_name,
+              bet_to,
+              amount: Math.round(amount),
+            });
+
+            if (error) {
+              console.error(error);
+              setStatus(error.message ? `저장 실패: ${error.message}` : "저장에 실패했습니다.", true);
+              submitBtn && (submitBtn.disabled = false);
+              return;
+            }
+
+            setStatus("배팅이 반영되었습니다.");
+            try {
+              await loadAll();
+            } catch (err) {
+              console.error(err);
+            }
+            submitBtn && (submitBtn.disabled = false);
+          });
+        }
+
+        ["input", "change"].forEach((ev) => {
+          amountInput?.addEventListener(ev, () => updatePayoutPreview(latestAgg));
+          form?.addEventListener(ev, (e) => {
+            if (e.target?.matches?.('input[name="bet_to"]')) updatePayoutPreview(latestAgg);
+          });
+        });
+      }
+
+      window.addEventListener("beforeunload", () => {
+        try {
+          if (client && channel) client.removeChannel(channel);
+        } catch {
+          /* noop */
+        }
+      });
+    }
+  }
 })();
 
