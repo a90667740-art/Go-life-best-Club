@@ -335,13 +335,20 @@ img{ max-width: 100%; display: block; }
 .hero__bgLogo{
   position: absolute;
   left: 50%;
-  top: 40%;
+  top: 37%;
   transform: translate(-50%, -50%);
-  width: 80px;
-  height: 80px;
+  width: 148px;
+  height: 148px;
+  min-width: 124px;
+  min-height: 124px;
+  max-width: 72%;
+  max-height: 52%;
+  padding: 0;
+  box-sizing: border-box;
   object-fit: contain;
-  opacity: .62;
-  filter: drop-shadow(0 12px 24px rgba(0,0,0,.32));
+  object-position: center;
+  opacity: .68;
+  filter: drop-shadow(0 14px 28px rgba(0,0,0,.34));
   pointer-events: none;
 }
 
@@ -2084,6 +2091,12 @@ tr.rank td:first-child{ white-space: nowrap; }
   .hero{ padding: 56px 0 56px; }
   .hero__card{ padding: 26px; }
   .hero__title{ font-size: 40px; }
+  .hero__bgLogo{
+    width: 156px;
+    height: 156px;
+    min-width: 140px;
+    min-height: 140px;
+  }
   .grid-2{ grid-template-columns: 1fr 1fr; }
   .grid-3{ grid-template-columns: repeat(3, 1fr); }
   .gallery{ grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
@@ -2142,10 +2155,12 @@ tr.rank td:first-child{ white-space: nowrap; }
     border-radius: 18px;
   }
   .hero__bgLogo{
-    width: 80px;
-    height: 80px;
-    object-fit: contain;
-    opacity: .66;
+    width: clamp(124px, 36vw, 148px);
+    height: clamp(124px, 36vw, 148px);
+    min-width: 124px;
+    min-height: 124px;
+    max-width: 78%;
+    opacity: .7;
   }
 }
 
