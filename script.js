@@ -150,7 +150,7 @@
     if (elMain && elSub) {
       const rounds = [
         { date: "2026-04-15T07:21:00", main: "4월 15일(수) · 07:21", sub: "써닝포인트 CC" },
-        { date: "2026-06-26T00:00:00", main: "6월 26일(금) · 미정", sub: "미정" },
+        { date: "2026-06-26T07:31:00", main: "6월 26일(금) · 07:31", sub: "Golf Club Q" },
         { date: "2026-07-12T00:00:00", main: "7월 12일(일) · 미정", sub: "미정" },
         { date: "2026-09-18T00:00:00", main: "9월 18일(금) · 미정", sub: "미정" },
         { date: "2026-11-06T00:00:00", main: "11월 6일(금) · 미정", sub: "미정" },
@@ -168,10 +168,20 @@
         elSub.textContent = chosen.sub;
       }
 
-      // Hide SNP logo when Next Round is no longer SNP
+      // Course logo by next venue (SNP / Golf Club Q / 미정 등)
       if (bgLogo) {
-        const show = chosen?.sub === "써닝포인트 CC";
-        bgLogo.style.display = show ? "" : "none";
+        const venue = chosen?.sub;
+        if (venue === "써닝포인트 CC") {
+          bgLogo.src = "./images/logo_snp.png";
+          bgLogo.alt = "써닝포인트 CC 로고";
+          bgLogo.style.display = "";
+        } else if (venue === "Golf Club Q") {
+          bgLogo.src = "./public/qlogo.png";
+          bgLogo.alt = "Golf Club Q 로고";
+          bgLogo.style.display = "";
+        } else {
+          bgLogo.style.display = "none";
+        }
       }
     }
   }
