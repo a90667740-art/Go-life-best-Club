@@ -176,7 +176,7 @@
           bgLogo.alt = "써닝포인트 CC 로고";
           bgLogo.style.display = "";
         } else if (venue === "Golf Club Q") {
-          bgLogo.src = "./public/qlogo.png";
+          bgLogo.src = "./qlogo.png";
           bgLogo.alt = "Golf Club Q 로고";
           bgLogo.style.display = "";
         } else {
