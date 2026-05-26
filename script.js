@@ -373,7 +373,7 @@
 
       const resetEditMode = () => {
         editingBetId = null;
-        if (submitBtn) submitBtn.textContent = "베팅하기";
+        if (submitBtn) submitBtn.textContent = "배팅하기";
       };
 
       const applyBettingPhaseState = () => {
@@ -394,7 +394,7 @@
 
         if (submitBtn) {
           submitBtn.disabled = !allow || matchupSubmitBusy;
-          submitBtn.textContent = editingBetId ? "수정완료" : "베팅하기";
+          submitBtn.textContent = editingBetId ? "수정완료" : "배팅하기";
           if (!allow || matchupSubmitBusy) submitBtn.setAttribute("aria-disabled", "true");
           else submitBtn.removeAttribute("aria-disabled");
         }
@@ -490,13 +490,41 @@
         return { totalA, totalB, pool, oddsA, oddsB };
       };
 
+      const calcExpectedPayout = (pool, sideTotal, betAmount) => {
+        if (!Number.isFinite(betAmount) || betAmount <= 0) return null;
+        if (!Number.isFinite(pool) || pool <= 0 || !Number.isFinite(sideTotal) || sideTotal <= 0) {
+          return null;
+        }
+        return (pool / sideTotal) * betAmount;
+      };
+
+      const poolTotalsForPreview = (baseAgg, side, amount, rows) => {
+        let totalA = baseAgg.totalA;
+        let totalB = baseAgg.totalB;
+        if (editingBetId && Array.isArray(rows)) {
+          const row = rows.find((r) => String(r.id) === String(editingBetId));
+          if (row) {
+            const oldAmt = Number(row.amount);
+            const oldSide = normalizeBetSide(row.bet_to);
+            if (Number.isFinite(oldAmt) && oldAmt > 0) {
+              if (oldSide === "A") totalA -= oldAmt;
+              else if (oldSide === "B") totalB -= oldAmt;
+            }
+          }
+        }
+        if (side === "A") totalA += amount;
+        else if (side === "B") totalB += amount;
+        const pool = totalA + totalB;
+        const sideTotal = side === "A" ? totalA : totalB;
+        return { pool, sideTotal };
+      };
+
       const expectedPayoutForRow = (row, agg) => {
         const amt = Number(row.amount);
         const side = normalizeBetSide(row.bet_to);
         if (!Number.isFinite(amt) || amt <= 0 || !side) return null;
-        const mult = side === "A" ? agg.oddsA : agg.oddsB;
-        if (mult == null || !Number.isFinite(mult) || mult <= 0) return null;
-        return amt * mult;
+        const sideTotal = side === "A" ? agg.totalA : agg.totalB;
+        return calcExpectedPayout(agg.pool, sideTotal, amt);
       };
 
       const flashOddsIfChanged = (el, key, displayStr) => {
@@ -535,7 +563,7 @@
           const td = document.createElement("td");
           td.colSpan = 6;
           td.className = "matchupTable__empty muted";
-          td.textContent = "아직 베팅 내역이 없습니다.";
+          td.textContent = "아직 배팅 내역이 없습니다.";
           tr.appendChild(td);
           historyBody.appendChild(tr);
           return;
@@ -592,7 +620,7 @@
               editBtn.setAttribute("data-matchup-edit-side", sideRaw);
               editBtn.setAttribute("data-matchup-edit-name", name);
               editBtn.setAttribute("data-matchup-edit-amount", Number.isFinite(amt) ? String(amt) : "");
-              editBtn.setAttribute("aria-label", "이 베팅 수정");
+              editBtn.setAttribute("aria-label", "이 배팅 수정");
               editBtn.innerHTML =
                 '<span class="matchupTable__editTxt">수정</span><svg class="matchupTable__editIcon" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>';
               wrap.appendChild(editBtn);
@@ -602,7 +630,7 @@
             delBtn.type = "button";
             delBtn.className = "matchupTable__del";
             delBtn.setAttribute("data-matchup-delete", String(row.id));
-            delBtn.setAttribute("aria-label", "이 베팅 삭제");
+            delBtn.setAttribute("aria-label", "이 배팅 삭제");
             delBtn.innerHTML =
               '<span class="matchupTable__delTxt">삭제</span><svg class="matchupTable__delIcon" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>';
             wrap.appendChild(delBtn);
@@ -639,21 +667,22 @@
           clearHighlight();
           return;
         }
-        const sideTotal = side === "A" ? agg.totalA : agg.totalB;
-        if (!Number.isFinite(agg.pool) || agg.pool <= 0 || !Number.isFinite(sideTotal) || sideTotal <= 0) {
+        const { pool, sideTotal } = poolTotalsForPreview(agg, side, amount, latestRows);
+        const payout = calcExpectedPayout(pool, sideTotal, amount);
+        if (payout == null || !Number.isFinite(payout)) {
           clearHighlight();
           return;
         }
-        const odds = agg.pool / sideTotal;
-        const payout = amount * odds;
         payoutValueEl.textContent = fmtKRW(payout);
         payoutWrapEl?.classList.add("matchupForm__payoutWrap--live");
       };
 
       let latestAgg = { totalA: 0, totalB: 0, pool: 0, oddsA: null, oddsB: null };
+      let latestRows = [];
 
       const refreshFromRows = (rows) => {
         pruneMyBetIds(rows);
+        latestRows = Array.isArray(rows) ? rows : [];
         const agg = aggregate(rows);
         latestAgg = agg;
         renderTotals(agg);
@@ -757,7 +786,7 @@
           startMatchupRealtime();
         } else if (historyBody) {
           historyBody.innerHTML =
-            '<tr class="matchupTable__emptyRow"><td colspan="6" class="matchupTable__empty muted">베팅 오픈 후 내역이 표시됩니다.</td></tr>';
+            '<tr class="matchupTable__emptyRow"><td colspan="6" class="matchupTable__empty muted">배팅 오픈 후 내역이 표시됩니다.</td></tr>';
         }
 
         if (form) {
@@ -770,7 +799,7 @@
               return;
             }
             if (isBettingClosed()) {
-              setStatus("베팅이 종료되었습니다.", true);
+              setStatus("배팅이 종료되었습니다.", true);
               applyBettingPhaseState();
               return;
             }
@@ -785,7 +814,7 @@
               return;
             }
             if (!bet_to) {
-              setStatus("베팅 대상을 선택해 주세요.", true);
+              setStatus("배팅 대상을 선택해 주세요.", true);
               return;
             }
             if (!Number.isFinite(amount) || amount < 10000 || amount > 100000) {
@@ -839,7 +868,7 @@
               return;
             }
 
-            setStatus("베팅 저장 중…");
+            setStatus("배팅 저장 중…");
 
             const { data: insertedRows, error } = await client
               .from("match_bets")
@@ -861,7 +890,7 @@
             const newId = Array.isArray(insertedRows) && insertedRows[0] ? insertedRows[0].id : null;
             if (newId != null) addMyBetId(newId);
 
-            setStatus("베팅이 반영되었습니다.");
+            setStatus("배팅이 반영되었습니다.");
             try {
               await loadAll();
             } catch (err) {
@@ -886,7 +915,7 @@
             const rawId = editBtn.getAttribute("data-matchup-edit");
             if (rawId == null || !isMyBetRow(rawId)) return;
             if (!canBet()) {
-              setStatus("베팅 수정은 오픈 후 마감 전에만 가능합니다.", true);
+              setStatus("배팅 수정은 오픈 후 마감 전에만 가능합니다.", true);
               return;
             }
             const name = String(editBtn.getAttribute("data-matchup-edit-name") || "").trim();
