@@ -1328,8 +1328,19 @@ tr.rank td:first-child{ white-space: nowrap; }
   color: var(--matchup-gold);
   font-weight: 800;
 }
+.matchupHeader__poster{
+  display: block;
+  max-width: 100%;
+  width: min(100%, 720px);
+  height: auto;
+  margin: 20px auto 0;
+  border-radius: calc(var(--radius-lg) + 2px);
+  border: 1px solid rgba(255, 255, 255, .12);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, .38);
+  object-fit: contain;
+}
 .matchupHeader__sub{
-  margin: 14px 0 0;
+  margin: 18px 0 0;
   font-size: 16px;
   line-height: 1.55;
   color: rgba(236, 244, 240, .66);
