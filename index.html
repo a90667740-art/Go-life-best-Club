@@ -96,6 +96,245 @@
         </div>
       </section>
 
+      <!-- MATCHUP: 실시간 배당 시뮬레이터 -->
+      <section class="section section--alt matchup" id="matchup" aria-label="Event Match Up 실시간 배팅">
+        <div class="container">
+          <header class="section__header matchupHeader">
+            <h2 class="matchupHeader__title">
+              Event Match Up <span class="matchupHeader__emph">실시간 배팅!</span>
+            </h2>
+            <img
+              class="matchupHeader__poster"
+              src="./poster.jpg"
+              alt="Event Match Up 이벤트 포스터"
+              width="1200"
+              height="675"
+              loading="lazy"
+              decoding="async"
+            />
+            <p class="matchupHeader__sub" id="matchupHeaderSub">5월 26일 오후 12시에 오픈됩니다!</p>
+          </header>
+
+          <!-- 오픈 전 전용: 배팅 시스템은 숨김, 아래 게이트만 표시 -->
+          <div class="matchupPreopenGate" id="matchupPreopenGate" aria-live="polite">
+            <div class="matchupPreopenGate__inner">
+              <div class="matchupPreopenGate__glow" aria-hidden="true"></div>
+              <img class="matchupPreopenGate__logo" src="./images/logo.jpg" width="88" height="88" alt="고라베 Golf Club" />
+              <p class="matchupPreopenGate__kicker">Golifebest · Event Match Up</p>
+              <p class="matchupPreopenGate__heading">배팅 시작까지 남은 시간</p>
+              <div class="matchupPreopenGate__timer" id="matchupPreopenTimer">
+                <div class="matchupPreopenGate__unit">
+                  <span class="matchupPreopenGate__num" id="matchupOpenCdDays">00</span>
+                  <span class="matchupPreopenGate__lbl">일</span>
+                </div>
+                <div class="matchupPreopenGate__unit">
+                  <span class="matchupPreopenGate__num" id="matchupOpenCdHours">00</span>
+                  <span class="matchupPreopenGate__lbl">시간</span>
+                </div>
+                <div class="matchupPreopenGate__unit">
+                  <span class="matchupPreopenGate__num" id="matchupOpenCdMins">00</span>
+                  <span class="matchupPreopenGate__lbl">분</span>
+                </div>
+                <div class="matchupPreopenGate__unit">
+                  <span class="matchupPreopenGate__num" id="matchupOpenCdSecs">00</span>
+                  <span class="matchupPreopenGate__lbl">초</span>
+                </div>
+              </div>
+              <p class="matchupPreopenGate__hint muted">5월 26일 정오에 배팅이 시작됩니다.</p>
+            </div>
+          </div>
+
+          <!-- 오픈 후 ~ 마감 전: 6/25 마감 카운트다운 (프리오픈 게이트와 동일 슬롯 역할) -->
+          <div class="matchupCountdown matchupCountdown--deadline" id="matchupCountdown" hidden>
+            <div class="matchupCountdown__phase" id="matchupCountdownDeadline">
+              <p class="matchupCountdown__line" id="matchupCountdownLine">
+                <span class="matchupCountdown__prefix">배팅 마감까지 남은 시간:</span>
+                <span class="matchupCountdown__clock" id="matchupCountdownClock" aria-hidden="true">
+                  <span class="matchupCountdown__unit"><span id="matchupCdDays">00</span>일</span>
+                  <span class="matchupCountdown__unit"><span id="matchupCdHours">00</span>시간</span>
+                  <span class="matchupCountdown__unit"><span id="matchupCdMins">00</span>분</span>
+                  <span class="matchupCountdown__unit"><span id="matchupCdSecs">00</span>초</span>
+                </span>
+              </p>
+            </div>
+            <p class="matchupCountdown__expired" id="matchupCountdownExpired" hidden>배팅이 종료되었습니다</p>
+          </div>
+
+          <div class="matchupDash" id="matchupLiveDash" data-matchup-root hidden>
+            <div class="matchupBoard">
+              <div class="matchupBoard__grid">
+                <article class="matchupFace matchupFace--a">
+                  <header class="matchupFace__head">
+                    <span class="matchupFace__tag">PLAYER A</span>
+                    <h3 class="matchupFace__name">최지훈</h3>
+                  </header>
+                  <dl class="matchupFace__stats">
+                    <div class="matchupFace__row matchupFace__row--pool">
+                      <dt>총 금액</dt>
+                      <dd><span class="matchupFace__pool" id="matchupTotalA">0원</span></dd>
+                    </div>
+                    <div class="matchupFace__row matchupFace__row--odds">
+                      <dt>배당률</dt>
+                      <dd>
+                        <div class="matchupOddsSlot" id="matchupOddsSlotA" data-empty="true">
+                          <span class="matchupOddsSlot__value matchupCard__odds" id="matchupOddsA"></span>
+                          <span class="matchupOddsSlot__void" aria-hidden="true">
+                            <span></span><span></span><span></span>
+                          </span>
+                        </div>
+                      </dd>
+                    </div>
+                  </dl>
+                </article>
+
+                <div class="matchupBoard__vsCol" aria-hidden="true">
+                  <div class="matchupVsIcon" title="대결">
+                    <svg class="matchupVsIcon__svg" viewBox="0 0 64 64" width="48" height="48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <circle cx="32" cy="32" r="30" stroke="rgba(232,200,114,.35)" stroke-width="1.2" />
+                      <circle cx="32" cy="32" r="22" stroke="rgba(232,200,114,.2)" stroke-width="1" />
+                      <path d="M22 24 L42 40 M42 24 L22 40" stroke="url(#matchupVsGrad)" stroke-width="2.2" stroke-linecap="round" />
+                      <defs>
+                        <linearGradient id="matchupVsGrad" x1="22" y1="24" x2="42" y2="40" gradientUnits="userSpaceOnUse">
+                          <stop stop-color="#f0dfa0" />
+                          <stop offset="1" stop-color="#c9a227" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                    <span class="matchupVsIcon__label">VS</span>
+                  </div>
+                </div>
+
+                <article class="matchupFace matchupFace--b">
+                  <header class="matchupFace__head">
+                    <span class="matchupFace__tag">PLAYER B</span>
+                    <h3 class="matchupFace__name">박민웅</h3>
+                  </header>
+                  <dl class="matchupFace__stats">
+                    <div class="matchupFace__row matchupFace__row--pool">
+                      <dt>총 금액</dt>
+                      <dd><span class="matchupFace__pool" id="matchupTotalB">0원</span></dd>
+                    </div>
+                    <div class="matchupFace__row matchupFace__row--odds">
+                      <dt>배당률</dt>
+                      <dd>
+                        <div class="matchupOddsSlot" id="matchupOddsSlotB" data-empty="true">
+                          <span class="matchupOddsSlot__value matchupCard__odds" id="matchupOddsB"></span>
+                          <span class="matchupOddsSlot__void" aria-hidden="true">
+                            <span></span><span></span><span></span>
+                          </span>
+                        </div>
+                      </dd>
+                    </div>
+                  </dl>
+                </article>
+              </div>
+              <footer class="matchupBoard__footer">
+                <span class="matchupBoard__poolLabel">전체 풀</span>
+                <strong class="matchupBoard__poolVal" id="matchupPoolValue">0원</strong>
+              </footer>
+            </div>
+
+            <p class="matchupDash__status muted" id="matchupStatus" role="status" aria-live="polite"></p>
+
+            <form class="matchupForm" id="matchupForm" novalidate>
+              <div class="matchupForm__row">
+                <label class="matchupForm__field">
+                  <span class="matchupForm__label">참여자</span>
+                  <select class="matchupForm__select" id="matchupMember" name="player_name" required>
+                    <option value="" disabled selected>회원 선택</option>
+                    <option value="김회용">김회용</option>
+                    <option value="전지오">전지오</option>
+                    <option value="주경필">주경필</option>
+                    <option value="양서훈">양서훈</option>
+                    <option value="김온">김온</option>
+                    <option value="문유석">문유석</option>
+                    <option value="김영두">김영두</option>
+                    <option value="최지훈">최지훈</option>
+                    <option value="김린">김린</option>
+                    <option value="이용">이용</option>
+                    <option value="김지진">김지진</option>
+                    <option value="박민웅">박민웅</option>
+                    <option value="계승범">계승범</option>
+                    <option value="홍원욱">홍원욱</option>
+                    <option value="허성훈">허성훈</option>
+                    <option value="김선후">김선후</option>
+                    <option value="김준환">김준환</option>
+                    <option value="오수창">오수창</option>
+                  </select>
+                </label>
+              </div>
+
+              <fieldset class="matchupForm__fieldset">
+                <legend class="matchupForm__legend">배팅 대상</legend>
+                <div class="matchupForm__toggle" role="radiogroup" aria-label="배팅 대상 선택">
+                  <label class="matchupForm__toggleBtn">
+                    <input type="radio" name="bet_to" value="A" checked />
+                    <span>최지훈 (A)</span>
+                  </label>
+                  <label class="matchupForm__toggleBtn">
+                    <input type="radio" name="bet_to" value="B" />
+                    <span>박민웅 (B)</span>
+                  </label>
+                </div>
+              </fieldset>
+
+              <div class="matchupForm__row">
+                <label class="matchupForm__field">
+                  <span class="matchupForm__label">금액 (10,000 ~ 100,000원)</span>
+                  <input
+                    class="matchupForm__input"
+                    type="number"
+                    id="matchupAmount"
+                    name="amount"
+                    min="10000"
+                    max="100000"
+                    step="1000"
+                    placeholder="10000"
+                    inputmode="numeric"
+                    required
+                  />
+                </label>
+              </div>
+
+              <div class="matchupForm__payoutWrap" id="matchupPayout">
+                <span class="matchupForm__payoutLabel">예상 환급금</span>
+                <p class="matchupForm__payout" aria-live="polite">
+                  <strong class="matchupForm__payoutStrong" id="matchupPayoutValue">—</strong>
+                </p>
+              </div>
+
+              <button type="submit" class="matchupForm__submit" id="matchupSubmit">배팅하기</button>
+            </form>
+
+            <div class="matchupHistory">
+              <h4 class="matchupHistory__title">최근 배팅</h4>
+              <div class="matchupTableWrap">
+                <table class="matchupTable">
+                  <thead>
+                    <tr>
+                      <th scope="col">시간</th>
+                      <th scope="col">이름</th>
+                      <th scope="col">대상</th>
+                      <th scope="col" class="matchupTable__thNum">금액</th>
+                      <th scope="col" class="matchupTable__thNum matchupTable__thPayout">예상 환급금</th>
+                      <th scope="col" class="matchupTable__thAct">
+                        <span class="sr-only">내 배팅 수정·삭제</span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody id="matchupHistoryBody">
+                    <tr class="matchupTable__placeholder">
+                      <td colspan="6">불러오는 중…</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
       <!-- ABOUT -->
       <section class="section" id="about" aria-label="모임 소개">
         <div class="container">
@@ -967,244 +1206,6 @@
               </div>
               <button type="button" class="eventCard__expand" aria-expanded="false" aria-controls="eventDetail-5" id="eventExpand-5" aria-label="세부 안내 펼치기">+</button>
             </article>
-          </div>
-        </div>
-      </section>
-
-      <!-- MATCHUP: 실시간 배당 시뮬레이터 -->
-      <section class="section section--alt matchup" id="matchup" aria-label="Event Match Up 실시간 배팅">
-        <div class="container">
-          <header class="section__header matchupHeader">
-            <h2 class="matchupHeader__title">
-              Event Match Up <span class="matchupHeader__emph">실시간 배팅!</span>
-            </h2>
-            <img
-              class="matchupHeader__poster"
-              src="./poster.jpg"
-              alt="Event Match Up 이벤트 포스터"
-              width="1200"
-              height="675"
-              loading="lazy"
-              decoding="async"
-            />
-            <p class="matchupHeader__sub" id="matchupHeaderSub">5월 26일 오후 12시에 오픈됩니다!</p>
-          </header>
-
-          <!-- 오픈 전 전용: 배팅 시스템은 숨김, 아래 게이트만 표시 -->
-          <div class="matchupPreopenGate" id="matchupPreopenGate" aria-live="polite">
-            <div class="matchupPreopenGate__inner">
-              <div class="matchupPreopenGate__glow" aria-hidden="true"></div>
-              <img class="matchupPreopenGate__logo" src="./images/logo.jpg" width="88" height="88" alt="고라베 Golf Club" />
-              <p class="matchupPreopenGate__kicker">Golifebest · Event Match Up</p>
-              <p class="matchupPreopenGate__heading">배팅 시작까지 남은 시간</p>
-              <div class="matchupPreopenGate__timer" id="matchupPreopenTimer">
-                <div class="matchupPreopenGate__unit">
-                  <span class="matchupPreopenGate__num" id="matchupOpenCdDays">00</span>
-                  <span class="matchupPreopenGate__lbl">일</span>
-                </div>
-                <div class="matchupPreopenGate__unit">
-                  <span class="matchupPreopenGate__num" id="matchupOpenCdHours">00</span>
-                  <span class="matchupPreopenGate__lbl">시간</span>
-                </div>
-                <div class="matchupPreopenGate__unit">
-                  <span class="matchupPreopenGate__num" id="matchupOpenCdMins">00</span>
-                  <span class="matchupPreopenGate__lbl">분</span>
-                </div>
-                <div class="matchupPreopenGate__unit">
-                  <span class="matchupPreopenGate__num" id="matchupOpenCdSecs">00</span>
-                  <span class="matchupPreopenGate__lbl">초</span>
-                </div>
-              </div>
-              <p class="matchupPreopenGate__hint muted">5월 26일 정오에 배팅이 시작됩니다.</p>
-            </div>
-          </div>
-
-          <!-- 오픈 후 ~ 마감 전: 6/25 마감 카운트다운 (프리오픈 게이트와 동일 슬롯 역할) -->
-          <div class="matchupCountdown matchupCountdown--deadline" id="matchupCountdown" hidden>
-            <div class="matchupCountdown__phase" id="matchupCountdownDeadline">
-              <p class="matchupCountdown__line" id="matchupCountdownLine">
-                <span class="matchupCountdown__prefix">배팅 마감까지 남은 시간:</span>
-                <span class="matchupCountdown__clock" id="matchupCountdownClock" aria-hidden="true">
-                  <span class="matchupCountdown__unit"><span id="matchupCdDays">00</span>일</span>
-                  <span class="matchupCountdown__unit"><span id="matchupCdHours">00</span>시간</span>
-                  <span class="matchupCountdown__unit"><span id="matchupCdMins">00</span>분</span>
-                  <span class="matchupCountdown__unit"><span id="matchupCdSecs">00</span>초</span>
-                </span>
-              </p>
-            </div>
-            <p class="matchupCountdown__expired" id="matchupCountdownExpired" hidden>배팅이 종료되었습니다</p>
-          </div>
-
-          <div class="matchupDash" id="matchupLiveDash" data-matchup-root hidden>
-            <div class="matchupBoard">
-              <div class="matchupBoard__grid">
-                <article class="matchupFace matchupFace--a">
-                  <header class="matchupFace__head">
-                    <span class="matchupFace__tag">PLAYER A</span>
-                    <h3 class="matchupFace__name">최지훈</h3>
-                  </header>
-                  <dl class="matchupFace__stats">
-                    <div class="matchupFace__row matchupFace__row--pool">
-                      <dt>총 금액</dt>
-                      <dd><span class="matchupFace__pool" id="matchupTotalA">0원</span></dd>
-                    </div>
-                    <div class="matchupFace__row matchupFace__row--odds">
-                      <dt>배당률</dt>
-                      <dd>
-                        <div class="matchupOddsSlot" id="matchupOddsSlotA" data-empty="true">
-                          <span class="matchupOddsSlot__value matchupCard__odds" id="matchupOddsA"></span>
-                          <span class="matchupOddsSlot__void" aria-hidden="true">
-                            <span></span><span></span><span></span>
-                          </span>
-                        </div>
-                      </dd>
-                    </div>
-                  </dl>
-                </article>
-
-                <div class="matchupBoard__vsCol" aria-hidden="true">
-                  <div class="matchupVsIcon" title="대결">
-                    <svg class="matchupVsIcon__svg" viewBox="0 0 64 64" width="48" height="48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                      <circle cx="32" cy="32" r="30" stroke="rgba(232,200,114,.35)" stroke-width="1.2" />
-                      <circle cx="32" cy="32" r="22" stroke="rgba(232,200,114,.2)" stroke-width="1" />
-                      <path d="M22 24 L42 40 M42 24 L22 40" stroke="url(#matchupVsGrad)" stroke-width="2.2" stroke-linecap="round" />
-                      <defs>
-                        <linearGradient id="matchupVsGrad" x1="22" y1="24" x2="42" y2="40" gradientUnits="userSpaceOnUse">
-                          <stop stop-color="#f0dfa0" />
-                          <stop offset="1" stop-color="#c9a227" />
-                        </linearGradient>
-                      </defs>
-                    </svg>
-                    <span class="matchupVsIcon__label">VS</span>
-                  </div>
-                </div>
-
-                <article class="matchupFace matchupFace--b">
-                  <header class="matchupFace__head">
-                    <span class="matchupFace__tag">PLAYER B</span>
-                    <h3 class="matchupFace__name">박민웅</h3>
-                  </header>
-                  <dl class="matchupFace__stats">
-                    <div class="matchupFace__row matchupFace__row--pool">
-                      <dt>총 금액</dt>
-                      <dd><span class="matchupFace__pool" id="matchupTotalB">0원</span></dd>
-                    </div>
-                    <div class="matchupFace__row matchupFace__row--odds">
-                      <dt>배당률</dt>
-                      <dd>
-                        <div class="matchupOddsSlot" id="matchupOddsSlotB" data-empty="true">
-                          <span class="matchupOddsSlot__value matchupCard__odds" id="matchupOddsB"></span>
-                          <span class="matchupOddsSlot__void" aria-hidden="true">
-                            <span></span><span></span><span></span>
-                          </span>
-                        </div>
-                      </dd>
-                    </div>
-                  </dl>
-                </article>
-              </div>
-              <footer class="matchupBoard__footer">
-                <span class="matchupBoard__poolLabel">전체 풀</span>
-                <strong class="matchupBoard__poolVal" id="matchupPoolValue">0원</strong>
-              </footer>
-            </div>
-
-            <p class="matchupDash__status muted" id="matchupStatus" role="status" aria-live="polite"></p>
-
-            <form class="matchupForm" id="matchupForm" novalidate>
-              <div class="matchupForm__row">
-                <label class="matchupForm__field">
-                  <span class="matchupForm__label">참여자</span>
-                  <select class="matchupForm__select" id="matchupMember" name="player_name" required>
-                    <option value="" disabled selected>회원 선택</option>
-                    <option value="김회용">김회용</option>
-                    <option value="전지오">전지오</option>
-                    <option value="주경필">주경필</option>
-                    <option value="양서훈">양서훈</option>
-                    <option value="김온">김온</option>
-                    <option value="문유석">문유석</option>
-                    <option value="김영두">김영두</option>
-                    <option value="최지훈">최지훈</option>
-                    <option value="김린">김린</option>
-                    <option value="이용">이용</option>
-                    <option value="김지진">김지진</option>
-                    <option value="박민웅">박민웅</option>
-                    <option value="계승범">계승범</option>
-                    <option value="홍원욱">홍원욱</option>
-                    <option value="허성훈">허성훈</option>
-                    <option value="김선후">김선후</option>
-                    <option value="김준환">김준환</option>
-                    <option value="오수창">오수창</option>
-                  </select>
-                </label>
-              </div>
-
-              <fieldset class="matchupForm__fieldset">
-                <legend class="matchupForm__legend">배팅 대상</legend>
-                <div class="matchupForm__toggle" role="radiogroup" aria-label="배팅 대상 선택">
-                  <label class="matchupForm__toggleBtn">
-                    <input type="radio" name="bet_to" value="A" checked />
-                    <span>최지훈 (A)</span>
-                  </label>
-                  <label class="matchupForm__toggleBtn">
-                    <input type="radio" name="bet_to" value="B" />
-                    <span>박민웅 (B)</span>
-                  </label>
-                </div>
-              </fieldset>
-
-              <div class="matchupForm__row">
-                <label class="matchupForm__field">
-                  <span class="matchupForm__label">금액 (10,000 ~ 100,000원)</span>
-                  <input
-                    class="matchupForm__input"
-                    type="number"
-                    id="matchupAmount"
-                    name="amount"
-                    min="10000"
-                    max="100000"
-                    step="1000"
-                    placeholder="10000"
-                    inputmode="numeric"
-                    required
-                  />
-                </label>
-              </div>
-
-              <div class="matchupForm__payoutWrap" id="matchupPayout">
-                <span class="matchupForm__payoutLabel">예상 환급금</span>
-                <p class="matchupForm__payout" aria-live="polite">
-                  <strong class="matchupForm__payoutStrong" id="matchupPayoutValue">—</strong>
-                </p>
-              </div>
-
-              <button type="submit" class="matchupForm__submit" id="matchupSubmit">배팅하기</button>
-            </form>
-
-            <div class="matchupHistory">
-              <h4 class="matchupHistory__title">최근 배팅</h4>
-              <div class="matchupTableWrap">
-                <table class="matchupTable">
-                  <thead>
-                    <tr>
-                      <th scope="col">시간</th>
-                      <th scope="col">이름</th>
-                      <th scope="col">대상</th>
-                      <th scope="col" class="matchupTable__thNum">금액</th>
-                      <th scope="col" class="matchupTable__thNum matchupTable__thPayout">예상 환급금</th>
-                      <th scope="col" class="matchupTable__thAct">
-                        <span class="sr-only">내 배팅 수정·삭제</span>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody id="matchupHistoryBody">
-                    <tr class="matchupTable__placeholder">
-                      <td colspan="6">불러오는 중…</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
           </div>
         </div>
       </section>
