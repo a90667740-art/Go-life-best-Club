@@ -1305,6 +1305,10 @@ tr.rank td:first-child{ white-space: nowrap; }
   margin-top: clamp(20px, 4vw, 36px);
   padding-top: clamp(40px, 6vw, 56px);
 }
+.matchup + #rsvp{
+  margin-top: clamp(16px, 3vw, 28px);
+  padding-top: clamp(36px, 5vw, 52px);
+}
 .matchup{
   --matchup-gold: #e8c872;
   --matchup-gold-deep: #c9a227;
