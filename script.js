@@ -269,63 +269,11 @@
 
     const root = $("#matchup");
     if (root) {
-      const MY_BET_IDS_KEY = "my_bet_ids";
-      const LEGACY_MY_BET_IDS_KEY = "golife_matchup_my_bet_ids";
-      try {
-        if (!localStorage.getItem(MY_BET_IDS_KEY) && localStorage.getItem(LEGACY_MY_BET_IDS_KEY)) {
-          localStorage.setItem(MY_BET_IDS_KEY, localStorage.getItem(LEGACY_MY_BET_IDS_KEY));
-        }
-      } catch {
-        /* noop */
-      }
-
       const OPEN_MS = new Date(2026, 4, 26, 12, 0, 0).getTime();
       const BET_DEADLINE_MS = new Date(2026, 5, 25, 12, 0, 0).getTime();
       let countdownTimer = null;
       let matchupSubmitBusy = false;
-      let editingBetId = null;
       const prevRowSnapshot = new Map();
-
-      const loadMyBetIds = () => {
-        try {
-          const raw = localStorage.getItem(MY_BET_IDS_KEY);
-          if (!raw) return [];
-          const parsed = JSON.parse(raw);
-          return Array.isArray(parsed) ? parsed.map((x) => String(x)) : [];
-        } catch {
-          return [];
-        }
-      };
-
-      const saveMyBetIds = (ids) => {
-        const uniq = [...new Set(ids.map((x) => String(x)))];
-        try {
-          localStorage.setItem(MY_BET_IDS_KEY, JSON.stringify(uniq));
-        } catch {
-          /* noop */
-        }
-      };
-
-      const addMyBetId = (id) => {
-        if (id == null) return;
-        const s = String(id);
-        const cur = loadMyBetIds();
-        if (!cur.includes(s)) cur.push(s);
-        saveMyBetIds(cur);
-      };
-
-      const removeMyBetId = (id) => {
-        if (id == null) return;
-        const s = String(id);
-        saveMyBetIds(loadMyBetIds().filter((x) => x !== s));
-      };
-
-      const isMyBetRow = (id) => (id != null ? loadMyBetIds().includes(String(id)) : false);
-
-      const pruneMyBetIds = (serverRows) => {
-        const serverIds = new Set((serverRows || []).map((r) => String(r.id)));
-        saveMyBetIds(loadMyBetIds().filter((id) => serverIds.has(id)));
-      };
 
       const createClient = window.supabase?.createClient;
       const statusEl = $("#matchupStatus");
@@ -371,11 +319,6 @@
         if (secEl) secEl.textContent = pad2(s);
       };
 
-      const resetEditMode = () => {
-        editingBetId = null;
-        if (submitBtn) submitBtn.textContent = "배팅하기";
-      };
-
       const applyBettingPhaseState = () => {
         const open = isOpen();
         const closed = isBettingClosed();
@@ -387,14 +330,12 @@
             : "5월 26일 오후 12시에 오픈됩니다!";
         }
 
-        if (!allow && editingBetId) resetEditMode();
-
         root.classList.toggle("matchup--preopen", !open && !closed);
         root.classList.toggle("matchup--closed", closed);
 
         if (submitBtn) {
           submitBtn.disabled = !allow || matchupSubmitBusy;
-          submitBtn.textContent = editingBetId ? "수정완료" : "배팅하기";
+          submitBtn.textContent = "배팅하기";
           if (!allow || matchupSubmitBusy) submitBtn.setAttribute("aria-disabled", "true");
           else submitBtn.removeAttribute("aria-disabled");
         }
@@ -498,20 +439,9 @@
         return (pool / sideTotal) * betAmount;
       };
 
-      const poolTotalsForPreview = (baseAgg, side, amount, rows) => {
+      const poolTotalsForPreview = (baseAgg, side, amount) => {
         let totalA = baseAgg.totalA;
         let totalB = baseAgg.totalB;
-        if (editingBetId && Array.isArray(rows)) {
-          const row = rows.find((r) => String(r.id) === String(editingBetId));
-          if (row) {
-            const oldAmt = Number(row.amount);
-            const oldSide = normalizeBetSide(row.bet_to);
-            if (Number.isFinite(oldAmt) && oldAmt > 0) {
-              if (oldSide === "A") totalA -= oldAmt;
-              else if (oldSide === "B") totalB -= oldAmt;
-            }
-          }
-        }
         if (side === "A") totalA += amount;
         else if (side === "B") totalB += amount;
         const pool = totalA + totalB;
@@ -561,7 +491,7 @@
           const tr = document.createElement("tr");
           tr.className = "matchupTable__emptyRow";
           const td = document.createElement("td");
-          td.colSpan = 6;
+          td.colSpan = 5;
           td.className = "matchupTable__empty muted";
           td.textContent = "아직 배팅 내역이 없습니다.";
           tr.appendChild(td);
@@ -605,39 +535,7 @@
             setTimeout(() => tdPay.classList.remove("matchupTable__cell--pulse"), 500);
           }
 
-          const tdAct = document.createElement("td");
-          tdAct.className = "matchupTable__act";
-          if (isMyBetRow(row.id)) {
-            const wrap = document.createElement("div");
-            wrap.className = "matchupTable__actions";
-
-            const sideRaw = normalizeBetSide(row.bet_to);
-            if (sideRaw) {
-              const editBtn = document.createElement("button");
-              editBtn.type = "button";
-              editBtn.className = "matchupTable__edit";
-              editBtn.setAttribute("data-matchup-edit", String(row.id));
-              editBtn.setAttribute("data-matchup-edit-side", sideRaw);
-              editBtn.setAttribute("data-matchup-edit-name", name);
-              editBtn.setAttribute("data-matchup-edit-amount", Number.isFinite(amt) ? String(amt) : "");
-              editBtn.setAttribute("aria-label", "이 배팅 수정");
-              editBtn.innerHTML =
-                '<span class="matchupTable__editTxt">수정</span><svg class="matchupTable__editIcon" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>';
-              wrap.appendChild(editBtn);
-            }
-
-            const delBtn = document.createElement("button");
-            delBtn.type = "button";
-            delBtn.className = "matchupTable__del";
-            delBtn.setAttribute("data-matchup-delete", String(row.id));
-            delBtn.setAttribute("aria-label", "이 배팅 삭제");
-            delBtn.innerHTML =
-              '<span class="matchupTable__delTxt">삭제</span><svg class="matchupTable__delIcon" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>';
-            wrap.appendChild(delBtn);
-            tdAct.appendChild(wrap);
-          }
-
-          tr.append(tdTime, tdName, tdTarget, tdAmt, tdPay, tdAct);
+          tr.append(tdTime, tdName, tdTarget, tdAmt, tdPay);
           historyBody.appendChild(tr);
           if (idKey) prevRowSnapshot.set(idKey, { amt: amtStr, pay: payStr });
         });
@@ -667,7 +565,7 @@
           clearHighlight();
           return;
         }
-        const { pool, sideTotal } = poolTotalsForPreview(agg, side, amount, latestRows);
+        const { pool, sideTotal } = poolTotalsForPreview(agg, side, amount);
         const payout = calcExpectedPayout(pool, sideTotal, amount);
         if (payout == null || !Number.isFinite(payout)) {
           clearHighlight();
@@ -678,16 +576,12 @@
       };
 
       let latestAgg = { totalA: 0, totalB: 0, pool: 0, oddsA: null, oddsB: null };
-      let latestRows = [];
 
       const refreshFromRows = (rows) => {
-        pruneMyBetIds(rows);
-        latestRows = Array.isArray(rows) ? rows : [];
         const agg = aggregate(rows);
         latestAgg = agg;
         renderTotals(agg);
         renderHistory(rows, agg);
-        if (editingBetId && !rows.some((r) => String(r.id) === editingBetId)) resetEditMode();
         updatePayoutPreview(agg);
         applyBettingPhaseState();
       };
@@ -717,7 +611,7 @@
             setStatus(err?.message ? `불러오기 실패: ${err.message}` : "데이터를 불러오지 못했습니다.", true);
             if (historyBody) {
               historyBody.innerHTML =
-                '<tr class="matchupTable__emptyRow"><td colspan="6" class="matchupTable__empty muted">데이터를 불러올 수 없습니다.</td></tr>';
+                '<tr class="matchupTable__emptyRow"><td colspan="5" class="matchupTable__empty muted">데이터를 불러올 수 없습니다.</td></tr>';
             }
           });
 
@@ -777,7 +671,7 @@
         setStatus("Supabase 클라이언트를 불러오지 못했습니다. 네트워크를 확인해 주세요.", true);
         if (historyBody) {
           historyBody.innerHTML =
-            '<tr class="matchupTable__emptyRow"><td colspan="6" class="matchupTable__empty muted">초기화 실패</td></tr>';
+            '<tr class="matchupTable__emptyRow"><td colspan="5" class="matchupTable__empty muted">초기화 실패</td></tr>';
         }
       } else {
         client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -786,7 +680,7 @@
           startMatchupRealtime();
         } else if (historyBody) {
           historyBody.innerHTML =
-            '<tr class="matchupTable__emptyRow"><td colspan="6" class="matchupTable__empty muted">배팅 오픈 후 내역이 표시됩니다.</td></tr>';
+            '<tr class="matchupTable__emptyRow"><td colspan="5" class="matchupTable__empty muted">배팅 오픈 후 내역이 표시됩니다.</td></tr>';
         }
 
         if (form) {
@@ -825,49 +719,6 @@
             matchupSubmitBusy = true;
             applyBettingPhaseState();
 
-            const idForQuery = (raw) => {
-              const str = String(raw);
-              return /^\d+$/.test(str) && Number(str) <= Number.MAX_SAFE_INTEGER ? Number(str) : raw;
-            };
-
-            if (editingBetId) {
-              if (!isMyBetRow(editingBetId)) {
-                resetEditMode();
-                matchupSubmitBusy = false;
-                applyBettingPhaseState();
-                return;
-              }
-              setStatus("수정 반영 중…");
-              const { error: upErr } = await client
-                .from("match_bets")
-                .update({
-                  player_name,
-                  bet_to,
-                  amount: Math.round(amount),
-                })
-                .eq("id", idForQuery(editingBetId));
-
-              if (upErr) {
-                console.error(upErr);
-                setStatus(upErr.message ? `수정 실패: ${upErr.message}` : "수정에 실패했습니다.", true);
-                matchupSubmitBusy = false;
-                applyBettingPhaseState();
-                return;
-              }
-
-              resetEditMode();
-              setStatus("수정되었습니다.");
-              try {
-                await loadAll();
-              } catch (err) {
-                console.error(err);
-              } finally {
-                matchupSubmitBusy = false;
-                applyBettingPhaseState();
-              }
-              return;
-            }
-
             setStatus("배팅 저장 중…");
 
             const { data: insertedRows, error } = await client
@@ -887,10 +738,11 @@
               return;
             }
 
-            const newId = Array.isArray(insertedRows) && insertedRows[0] ? insertedRows[0].id : null;
-            if (newId != null) addMyBetId(newId);
-
             setStatus("배팅이 반영되었습니다.");
+            form.reset();
+            const rA = form.querySelector('input[name="bet_to"][value="A"]');
+            if (rA) rA.checked = true;
+            updatePayoutPreview(latestAgg);
             try {
               await loadAll();
             } catch (err) {
@@ -907,76 +759,6 @@
           form?.addEventListener(ev, (e) => {
             if (e.target?.matches?.('input[name="bet_to"]')) updatePayoutPreview(latestAgg);
           });
-        });
-
-        historyBody?.addEventListener("click", async (e) => {
-          const editBtn = e.target.closest(".matchupTable__edit");
-          if (editBtn && historyBody.contains(editBtn)) {
-            const rawId = editBtn.getAttribute("data-matchup-edit");
-            if (rawId == null || !isMyBetRow(rawId)) return;
-            if (!canBet()) {
-              setStatus("배팅 수정은 오픈 후 마감 전에만 가능합니다.", true);
-              return;
-            }
-            const name = String(editBtn.getAttribute("data-matchup-edit-name") || "").trim();
-            const side = normalizeBetSide(editBtn.getAttribute("data-matchup-edit-side"));
-            const amtRaw = editBtn.getAttribute("data-matchup-edit-amount");
-            const amt = amtRaw === "" || amtRaw == null ? NaN : Number(amtRaw);
-
-            const sel = $("#matchupMember");
-            if (sel) {
-              sel.value = name;
-              if (!name || !Array.from(sel.options).some((o) => o.value === name)) {
-                setStatus("목록에 없는 이름입니다. 회원 목록을 확인해 주세요.", true);
-                return;
-              }
-            }
-            const rA = form?.querySelector('input[name="bet_to"][value="A"]');
-            const rB = form?.querySelector('input[name="bet_to"][value="B"]');
-            if (side === "A" && rA) {
-              rA.checked = true;
-            } else if (side === "B" && rB) {
-              rB.checked = true;
-            }
-            if (amountInput && Number.isFinite(amt)) amountInput.value = String(amt);
-            editingBetId = String(rawId);
-            if (submitBtn) submitBtn.textContent = "수정완료";
-            applyBettingPhaseState();
-            updatePayoutPreview(latestAgg);
-            setStatus("수정할 내용을 확인한 뒤 [수정완료]를 눌러 주세요.");
-            return;
-          }
-
-          const btn = e.target.closest(".matchupTable__del");
-          if (!btn || !historyBody.contains(btn)) return;
-          const rawId = btn.getAttribute("data-matchup-delete");
-          if (rawId == null || !client) return;
-          if (!isMyBetRow(rawId)) return;
-
-          const s = String(rawId);
-          const idForQuery =
-            /^\d+$/.test(s) && Number(s) <= Number.MAX_SAFE_INTEGER ? Number(s) : rawId;
-          btn.disabled = true;
-          setStatus("삭제 중…");
-
-          const { error: delErr } = await client.from("match_bets").delete().eq("id", idForQuery);
-
-          if (delErr) {
-            console.error(delErr);
-            setStatus(delErr.message ? `삭제 실패: ${delErr.message}` : "삭제에 실패했습니다.", true);
-            btn.disabled = false;
-            return;
-          }
-
-          if (editingBetId === String(rawId)) resetEditMode();
-          removeMyBetId(rawId);
-          setStatus("삭제되었습니다.");
-          try {
-            await loadAll();
-          } catch (err) {
-            console.error(err);
-          }
-          applyBettingPhaseState();
         });
       }
 
