@@ -1252,7 +1252,8 @@ tr.rank td:first-child{ white-space: nowrap; }
   width: 100%;
   height: auto;
   aspect-ratio: 1 / 1;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
   background:
     radial-gradient(220px 140px at 30% 30%, rgba(199,255,131,.18), transparent 70%),
     radial-gradient(200px 140px at 80% 35%, rgba(25,165,106,.22), transparent 70%),

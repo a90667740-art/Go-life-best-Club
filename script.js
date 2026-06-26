@@ -257,6 +257,10 @@
     const gallery = $("#gallery .gallery");
     if (gallery) {
       const latestGalleryImages = [
+        "./images/golfclubq4.jpg",
+        "./images/golfclubq3.jpg",
+        "./images/golfclubq2.jpg",
+        "./images/golfclubq1.jpg",
         "./images/sunning12.jpg",
         "./images/sunning11.jpg",
         "./images/sunning10.jpg",
