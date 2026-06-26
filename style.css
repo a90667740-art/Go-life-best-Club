@@ -1021,6 +1021,16 @@ tr.rank td:first-child{ white-space: nowrap; }
   border-color: rgba(25,165,106,.34);
   background: rgba(25,165,106,.12);
 }
+.eventTag--cancelled{
+  border-color: rgba(255,120,120,.45);
+  background: rgba(255,80,80,.14);
+  color: rgba(255,220,220,.96);
+}
+.eventCard--cancelled .eventCard__title{
+  opacity: .72;
+  text-decoration: line-through;
+  text-decoration-color: rgba(255,160,160,.55);
+}
 .eventCard__title{
   margin: 0;
   font-size: 18px;
@@ -1964,100 +1974,6 @@ tr.rank td:first-child{ white-space: nowrap; }
 }
 .matchupTable__thPayout{
   min-width: 7.5rem;
-}
-.matchupTable__thAct{
-  width: 6.75rem;
-  min-width: 6.75rem;
-  padding-left: 4px !important;
-  padding-right: 8px !important;
-  text-align: right;
-}
-.matchupTable__act{
-  width: 6.75rem;
-  min-width: 6.75rem;
-  padding: 8px 6px !important;
-  text-align: right;
-  vertical-align: middle;
-}
-.matchupTable__actions{
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 6px;
-  flex-wrap: nowrap;
-}
-.matchupTable__edit{
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  min-height: 30px;
-  padding: 5px 7px;
-  border: none;
-  border-radius: 10px;
-  background: transparent;
-  color: #7dd3fc;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 700;
-  transition: color .15s ease, background .15s ease, transform .15s ease;
-}
-.matchupTable__editTxt{
-  line-height: 1;
-}
-.matchupTable__edit:hover{
-  color: #bae6fd;
-  background: rgba(56, 189, 248, .12);
-}
-.matchupTable__edit:active{
-  transform: scale(.97);
-}
-.matchupTable__editIcon{
-  display: block;
-  flex-shrink: 0;
-  opacity: .95;
-}
-@media (prefers-reduced-motion: reduce){
-  .matchupTable__edit:active{ transform: none; }
-}
-.matchupTable__del{
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  min-height: 32px;
-  padding: 6px 8px;
-  border: none;
-  border-radius: 10px;
-  background: transparent;
-  color: #f87171;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 700;
-  transition: color .15s ease, background .15s ease, transform .15s ease;
-}
-.matchupTable__delTxt{
-  line-height: 1;
-}
-.matchupTable__del:hover{
-  color: #fecaca;
-  background: rgba(248, 113, 113, .18);
-}
-.matchupTable__del:active{
-  transform: scale(.97);
-}
-.matchupTable__del:disabled{
-  opacity: .45;
-  cursor: wait;
-  pointer-events: none;
-}
-.matchupTable__delIcon{
-  display: block;
-  flex-shrink: 0;
-  color: inherit;
-}
-@media (prefers-reduced-motion: reduce){
-  .matchupTable__del:active{ transform: none; }
 }
 .matchupTable tbody td{
   padding: 12px 12px;

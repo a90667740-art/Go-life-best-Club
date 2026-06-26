@@ -142,27 +142,64 @@
     }
   }
 
-  // Next Round (nearest upcoming regular round)
+  // Next Round (nearest upcoming regular round from RSVP cards)
   {
     const elMain = $("#nextRoundMain");
     const elSub = $("#nextRoundSub");
     const bgLogo = document.querySelector(".hero__bgLogo");
-    if (elMain && elSub) {
-      const rounds = [
-        { date: "2026-04-15T07:21:00", main: "4월 15일(수) · 07:21", sub: "써닝포인트 CC" },
-        { date: "2026-06-26T07:31:00", main: "6월 26일(금) · 07:31", sub: "Golf Club Q" },
-        { date: "2026-07-12T00:00:00", main: "7월 12일(일) · 미정", sub: "미정" },
-        { date: "2026-09-18T00:00:00", main: "9월 18일(금) · 미정", sub: "미정" },
-        { date: "2026-11-06T00:00:00", main: "11월 6일(금) · 미정", sub: "미정" },
-      ].map((r) => ({ ...r, ts: new Date(r.date).getTime() }));
+    const rsvpSection = $("#rsvp");
 
+    const parseRsvpRounds = () => {
+      if (!rsvpSection) return [];
+      return $$(".eventCard--schedule", rsvpSection)
+        .map((card) => {
+          const cancelled =
+            card.classList.contains("eventCard--cancelled") ||
+            /취소|캔슬|cancel/i.test($(".eventTag", card)?.textContent || "");
+          const year = Number.parseInt(($(".eventCard__top .muted", card)?.textContent || "2026").trim(), 10) || 2026;
+          const title = ($(".eventCard__title", card)?.textContent || "").trim();
+          const dateMatch = title.match(/(\d+)\s*월\s*(\d+)\s*일/);
+          if (!dateMatch) return null;
+
+          const month = Number.parseInt(dateMatch[1], 10);
+          const day = Number.parseInt(dateMatch[2], 10);
+          let venue = "미정";
+          let teeTime = "미정";
+
+          $$(".eventMeta li", card).forEach((li) => {
+            const strong = $("strong", li);
+            const label = (strong?.textContent || "").trim();
+            const value = (li.textContent || "").replace(label, "").trim();
+            if (label === "장소") venue = value || "미정";
+            if (label === "Tee-Up 시간") teeTime = value || "미정";
+          });
+
+          const weekdayMatch = title.match(/\(([월화수목금토일])\)/);
+          const weekday = weekdayMatch ? weekdayMatch[1] : "";
+          const main = `${month}월 ${day}일${weekday ? `(${weekday})` : ""} · ${teeTime}`;
+
+          let hours = 23;
+          let minutes = 59;
+          const timeMatch = teeTime.match(/(\d{1,2}):(\d{2})/);
+          if (timeMatch) {
+            hours = Number.parseInt(timeMatch[1], 10);
+            minutes = Number.parseInt(timeMatch[2], 10);
+          }
+
+          const ts = new Date(year, month - 1, day, hours, minutes).getTime();
+          return { main, sub: venue, ts, cancelled };
+        })
+        .filter(Boolean);
+    };
+
+    if (elMain && elSub) {
+      const rounds = parseRsvpRounds();
       const now = Date.now();
       const upcoming = rounds
-        .filter((r) => Number.isFinite(r.ts) && r.ts >= now)
+        .filter((r) => !r.cancelled && Number.isFinite(r.ts) && r.ts >= now)
         .sort((a, b) => a.ts - b.ts)[0];
 
-      // If all passed, show the last one (or keep default)
-      const chosen = upcoming ?? rounds.sort((a, b) => b.ts - a.ts)[0];
+      const chosen = upcoming ?? rounds.filter((r) => !r.cancelled).sort((a, b) => b.ts - a.ts)[0];
       if (chosen) {
         elMain.textContent = chosen.main;
         elSub.textContent = chosen.sub;
