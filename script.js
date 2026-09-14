@@ -216,6 +216,10 @@
           bgLogo.src = "./qlogo.png";
           bgLogo.alt = "Golf Club Q 로고";
           bgLogo.style.display = "";
+        } else if (venue === "크리스밸리 CC") {
+          bgLogo.src = "./images/creas logoh.png";
+          bgLogo.alt = "크리스밸리 CC 로고";
+          bgLogo.style.display = "";
         } else {
           bgLogo.style.display = "none";
         }
