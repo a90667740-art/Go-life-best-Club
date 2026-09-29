@@ -261,6 +261,9 @@
     const gallery = $("#gallery .gallery");
     if (gallery) {
       const latestGalleryImages = [
+        "./images/KakaoTalk_20260929_100441443.jpg",
+        "./images/KakaoTalk_20260929_100441443_01.jpg",
+        "./images/KakaoTalk_20260929_100441443_02.jpg",
         "./images/golfclubq4.jpg",
         "./images/golfclubq3.jpg",
         "./images/golfclubq2.jpg",
