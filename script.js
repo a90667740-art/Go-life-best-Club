@@ -220,6 +220,10 @@
           bgLogo.src = "./images/creas logoh.png";
           bgLogo.alt = "크리스밸리 CC 로고";
           bgLogo.style.display = "";
+        } else if (venue === "젠스필드CC") {
+          bgLogo.src = "./images/젠필logo.png";
+          bgLogo.alt = "젠스필드CC 로고";
+          bgLogo.style.display = "";
         } else {
           bgLogo.style.display = "none";
         }
